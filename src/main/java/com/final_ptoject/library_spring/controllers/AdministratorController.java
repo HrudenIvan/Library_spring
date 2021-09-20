@@ -1,6 +1,9 @@
 package com.final_ptoject.library_spring.controllers;
 
+import com.final_ptoject.library_spring.dto.PublisherDTO;
 import com.final_ptoject.library_spring.dto.UserDTO;
+import com.final_ptoject.library_spring.entities.Publisher;
+import com.final_ptoject.library_spring.services.PublisherService;
 import com.final_ptoject.library_spring.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -19,17 +22,54 @@ import static com.final_ptoject.library_spring.utils.Validator.*;
 @RequestMapping("/administrator")
 public class AdministratorController {
     private UserService userService;
+    private PublisherService publisherService;
+
+    @PostMapping("/publishers/delete/{id}")
+    public String deletePublisher(@PathVariable Long id) {
+        publisherService.deletePublisherById(id);
+        return ADMIN_ALL_PUBLISHERS_REDIRECT;
+    }
+
+    @PostMapping("/publishers/{id}")
+    public String updatePublisher(@PathVariable Long id, @ModelAttribute("publisher") PublisherDTO publisherDTO) {
+        publisherService.updatePublisher(id, publisherDTO);
+        return ADMIN_ALL_PUBLISHERS_REDIRECT;
+    }
+
+    @GetMapping("/publishers/edit/{id}")
+    public String editPublisherForm(@PathVariable Long id, Model model) {
+        model.addAttribute("publisher", toDTO(publisherService.findPublisherById(id)));
+        return ADMIN_EDIT_PUBLISHER_PAGE;
+    }
+
+    @PostMapping("/publishers")
+    public String addNewPublisher(@ModelAttribute("publisher") PublisherDTO publisherDTO) {
+        publisherService.savePublisher(publisherDTO);
+        return ADMIN_ALL_PUBLISHERS_REDIRECT;
+    }
+
+    @GetMapping("/publishers/new")
+    public String createPublisherForm(Model model) {
+        model.addAttribute("publisher", toDTO(new Publisher()));
+        return ADMIN_CREATE_PUBLISHER_PAGE;
+    }
+
+    @GetMapping("/publishers")
+    public String getAllPublishers(Model model) {
+        model.addAttribute("publishers", publisherListToDTO(publisherService.getAllPublishers()));
+        return ADMIN_ALL_PUBLISHERS_PAGE;
+    }
 
     @GetMapping("/users")
     public String getAllUsers(Model model) {
-        model.addAttribute("users", toDTO(userService.getAllUsers()));
-        return ADMIN_ALL_USERS;
+        model.addAttribute("users", userListToDTO(userService.getAllUsers()));
+        return ADMIN_ALL_USERS_PAGE;
     }
 
     @GetMapping("/users/new")
     public String createUserForm(Model model) {
         model.addAttribute("user", new UserDTO());
-        return ADMIN_CREATE_USER;
+        return ADMIN_CREATE_USER_PAGE;
     }
 
     @PostMapping("/users")
@@ -39,7 +79,7 @@ public class AdministratorController {
             return ADMIN_ALL_USERS_REDIRECT;
         } else {
             model.addAttribute("user", userDTO);
-            return ADMIN_CREATE_USER;
+            return ADMIN_CREATE_USER_PAGE;
         }
 
     }
@@ -47,17 +87,17 @@ public class AdministratorController {
     @GetMapping("/users/edit/{id}")
     public String editUserForm(@PathVariable long id, Model model) {
         model.addAttribute("user", toDTO(userService.findUserById(id)));
-        return ADMIN_EDIT_USER;
+        return ADMIN_EDIT_USER_PAGE;
     }
 
     @PostMapping("/users/{id}")
-    public String editUser(@PathVariable long id, @ModelAttribute("user") UserDTO userDTO, Model model) {
+    public String updateUser(@PathVariable long id, @ModelAttribute("user") UserDTO userDTO, Model model) {
         if (validateUser(userDTO, model)) {
             userService.updateUser(id, userDTO);
             return ADMIN_ALL_USERS_REDIRECT;
         } else {
             model.addAttribute("user", userDTO);
-            return ADMIN_EDIT_USER;
+            return ADMIN_EDIT_USER_PAGE;
         }
 
     }

@@ -21,7 +21,8 @@
     <br>
     <div class="row">
         <div class="col-lg-3">
-            <a th:href="@{/administrator/users/new}" class="btn btn-outline-success mb-3" th:text="#{c.button.add}">Add user</a>
+            <a th:href="@{/administrator/users/new}" class="btn btn-outline-success mb-3" th:text="#{c.button.add}">Add
+                user</a>
         </div>
     </div>
     <table class="table table-striped table-hover">
@@ -33,7 +34,7 @@
             <th th:text="#{c.penalty}">Penalty</th>
             <th th:text="#{c.blocked}">IsBlocked</th>
             <th th:text="#{c.userType}">User type</th>
-            <th style="width:20%" th:text="#{c.action}">Action</th>
+            <th style="width:20%; text-align: right" th:text="#{c.action}">Action</th>
         </tr>
         </thead>
         <tbody>
@@ -44,13 +45,15 @@
             <td th:text="${user.penalty}"></td>
             <td><input type="checkbox" th:checked="${user.blocked}" disabled></td>
             <td th:text="${user.userType.type}"></td>
-            <td>
+            <td style="text-align: right">
                 <form th:action="@{/administrator/users/edit/{id}(id=${user.id})}" method="get" class="d-inline">
-                    <button type="submit" class="btn btn-outline-primary d-inline" th:text="#{c.button.edit}">Edit</button>
+                    <button type="submit" class="btn btn-outline-primary d-inline" th:text="#{c.button.edit}">Edit
+                    </button>
                 </form>
                 <form th:action="@{/administrator/users/delete/{id}(id=${user.id})}" method="post"
                       class="d-inline ">
-                    <button type="submit" class="btn btn-outline-danger d-inline" th:text="#{c.button.delete}">Delete</button>
+                    <button type="submit" class="btn btn-outline-danger d-inline" th:text="#{c.button.delete}">Delete
+                    </button>
                 </form>
             </td>
         </tr>

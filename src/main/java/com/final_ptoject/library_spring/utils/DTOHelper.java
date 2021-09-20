@@ -1,14 +1,23 @@
 package com.final_ptoject.library_spring.utils;
 
 import com.final_ptoject.library_spring.dto.UserDTO;
+import com.final_ptoject.library_spring.entities.Publisher;
 import com.final_ptoject.library_spring.entities.User;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DTOHelper {
 
     private DTOHelper() {
+    }
+
+    public static com.final_ptoject.library_spring.dto.PublisherDTO toDTO(Publisher publisher) {
+        return com.final_ptoject.library_spring.dto.PublisherDTO
+                .builder()
+                .id(publisher.getId())
+                .name(publisher.getName())
+                .build();
     }
 
     public static UserDTO toDTO(User user) {
@@ -24,13 +33,12 @@ public class DTOHelper {
                 .build();
     }
 
-    public static List<UserDTO> toDTO(List<User> users) {
-        List<UserDTO> userDTOS = new ArrayList<>();
-        for (User user : users) {
-            userDTOS.add(toDTO(user));
-        }
+    public static List<UserDTO> userListToDTO(List<User> users) {
+        return users.stream().map(DTOHelper::toDTO).collect(Collectors.toList());
+    }
 
-        return userDTOS;
+    public static List<com.final_ptoject.library_spring.dto.PublisherDTO> publisherListToDTO(List<Publisher> publishers) {
+        return publishers.stream().map(DTOHelper::toDTO).collect(Collectors.toList());
     }
 
 }
