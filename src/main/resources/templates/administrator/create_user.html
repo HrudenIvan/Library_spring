@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title th:text="#{cu.title}">Create user</title>
+</head>
+<body>
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+            <h1 class="text-center" th:text="#{cu.head}">Create new User</h1>
+            <div class="card-body">
+                <form th:action="@{/administrator/users}" th:object="${user}" method="post">
+                    <div class="form-group">
+                        <label for="login" th:text="#{c.login}">Login</label>
+                        <input id="login" type="text" name="login" th:field="*{login}" class="form-control"
+                               th:placeholder="#{c.loginPH}" th:required="required">
+                        <p style="color: red" th:if="${loginErr}" th:text="#{login.regex}"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="firstName" th:text="#{c.firstName}">First name</label>
+                        <input id="firstName" type="text" name="firstName" th:field="*{firstName}" class="form-control"
+                               th:placeholder="#{c.firstNamePH}" th:required="required">
+                        <p style="color: red" th:if="${firstNameErr}" th:text="#{firstName.empty}"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName" th:text="#{c.lastName}">Last name</label>
+                        <input id="lastName" type="text" name="lastName" th:field="*{lastName}" class="form-control"
+                               th:placeholder="#{c.lastNamePH}" th:required="required">
+                        <p style="color: red" th:if="${lastNameErr}" th:text="#{lastName.empty}"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" th:text="#{c.password}">Password</label>
+                        <input id="password" type="password" name="password" th:field="*{password}" class="form-control"
+                               th:placeholder="#{c.passwordPH}" th:required="required">
+                        <p style="color: red" th:if="${passwordRegexErr}" th:text="#{password.regex}"></p>
+                        <p style="color: red" th:if="${passwordEqualsErr}" th:text="#{password.equals}"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordConfirm" th:text="#{c.passwordConfirm}">Confirm Password</label>
+                        <input id="passwordConfirm" type="password" name="passwordConfirm" th:field="*{passwordConfirm}"
+                               class="form-control"
+                               th:placeholder="#{c.passwordConfirmPH}" th:required="required">
+                    </div>
+                    <div class="form-group">
+                        <label for="userType.id" th:text="#{c.userType}">User type</label>
+                        <select id="userType.id" class="form-control" name="userType" th:field="*{userType.id}">
+                            <option th:value="1" th:text="#{c.admin}">Admin</option>
+                            <option th:value="2" th:text="#{c.librarian}">Librarian</option>
+                            <option th:value="3" th:text="#{c.user}">User</option>
+                        </select>
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-outline-success mb-3" th:text="#{c.button.submit}">
+                        Submit
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title th:text="#{au.title}">All users</title>
+</head>
+<body>
+<div class="container">
+    <a th:href="@{${#httpServletRequest.requestURI}(lang='en')}">
+        <i>EN</i>
+    </a>
+    <a th:href="@{${#httpServletRequest.requestURI}(lang='ru')}">
+        <i>RU</i>
+    </a>
+    <br>
+    <div class="row">
+        <h1 class="text-center" th:text="#{au.head}">List of users</h1>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-3">
+            <a th:href="@{/administrator/users/new}" class="btn btn-outline-success mb-3" th:text="#{c.button.add}">Add user</a>
+        </div>
+    </div>
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th th:text="#{c.login}">login</th>
+            <th th:text="#{c.firstName}">First name</th>
+            <th th:text="#{c.lastName}">Last Name</th>
+            <th th:text="#{c.penalty}">Penalty</th>
+            <th th:text="#{c.blocked}">IsBlocked</th>
+            <th th:text="#{c.userType}">User type</th>
+            <th style="width:20%" th:text="#{c.action}">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.login}"></td>
+            <td th:text="${user.firstName}"></td>
+            <td th:text="${user.lastName}"></td>
+            <td th:text="${user.penalty}"></td>
+            <td><input type="checkbox" th:checked="${user.blocked}" disabled></td>
+            <td th:text="${user.userType.type}"></td>
+            <td>
+                <form th:action="@{/administrator/users/edit/{id}(id=${user.id})}" method="get" class="d-inline">
+                    <button type="submit" class="btn btn-outline-primary d-inline" th:text="#{c.button.edit}">Edit</button>
+                </form>
+                <form th:action="@{/administrator/users/delete/{id}(id=${user.id})}" method="post"
+                      class="d-inline ">
+                    <button type="submit" class="btn btn-outline-danger d-inline" th:text="#{c.button.delete}">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
