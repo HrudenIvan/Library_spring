@@ -13,11 +13,14 @@
         <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
             <h1 class="text-center" th:text="#{cp.head}">Create new publisher</h1>
             <div class="card-body">
-                <form th:action="@{/administrator/publishers}" th:object="${publisher}" method="post">
+                <form th:action="@{/administrator/publishers}" th:object="${publisherDTO}" method="post">
                     <div class="form-group">
                         <label for="name" th:text="#{c.name}">Publisher name</label>
                         <input id="name" type="text" name="name" th:field="*{name}" class="form-control"
                                th:placeholder="#{c.namePH}" th:required="required">
+                        <ul>
+                            <li th:each="err : ${#fields.errors('name')}" th:text="${err}" style="color:red;">Error</li>
+                        </ul>
                     </div>
                     <br>
                     <button type="submit" class="btn btn-outline-success mb-3" th:text="#{c.button.submit}">

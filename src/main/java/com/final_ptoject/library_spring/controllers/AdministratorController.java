@@ -1,20 +1,25 @@
 package com.final_ptoject.library_spring.controllers;
 
+import com.final_ptoject.library_spring.dto.AuthorDTO;
 import com.final_ptoject.library_spring.dto.PublisherDTO;
 import com.final_ptoject.library_spring.dto.UserDTO;
-import com.final_ptoject.library_spring.entities.Publisher;
+import com.final_ptoject.library_spring.entities.Author;
+import com.final_ptoject.library_spring.services.AuthorService;
 import com.final_ptoject.library_spring.services.PublisherService;
 import com.final_ptoject.library_spring.services.UserService;
+import com.final_ptoject.library_spring.validators.AuthorDTOValidator;
+import com.final_ptoject.library_spring.validators.PublisherDTOValidator;
+import com.final_ptoject.library_spring.validators.UserDTOValidator;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import static com.final_ptoject.library_spring.utils.Constants.*;
 import static com.final_ptoject.library_spring.utils.DTOHelper.*;
-import static com.final_ptoject.library_spring.utils.Validator.*;
 
 @NoArgsConstructor
 @AllArgsConstructor(onConstructor_ = {@Autowired})
@@ -23,88 +28,153 @@ import static com.final_ptoject.library_spring.utils.Validator.*;
 public class AdministratorController {
     private UserService userService;
     private PublisherService publisherService;
+    private AuthorService authorService;
+    private AuthorDTOValidator authorDTOValidator;
+    private UserDTOValidator userDTOValidator;
+    private PublisherDTOValidator publisherDTOValidator;
+
+
+    @PostMapping("/authors/delete/{id}")
+    public String deleteAuthor(@PathVariable Long id) {
+        authorService.deleteAuthorById(id);
+        return ADMIN_AUTHORS_ALL_REDIRECT;
+    }
+
+    @PostMapping("/authors/{id}")
+    public String updateAuthor(@PathVariable Long id, @ModelAttribute AuthorDTO authorDTO, BindingResult errors, Model model) {
+        authorDTOValidator.validate(authorDTO, errors);
+        if (errors.hasErrors()) {
+            model.addAttribute(authorDTO);
+            return ADMIN_AUTHOR_EDIT_PAGE;
+        }
+
+        authorService.updateAuthor(id, authorDTO);
+        return ADMIN_AUTHORS_ALL_REDIRECT;
+    }
+
+    @PostMapping("/authors")
+    public String saveAuthor(@ModelAttribute AuthorDTO authorDTO, BindingResult errors, Model model) {
+        authorDTOValidator.validate(authorDTO, errors);
+        if (errors.hasErrors()) {
+            model.addAttribute(authorDTO);
+            return ADMIN_AUTHOR_CREATE_PAGE;
+        }
+
+        authorService.saveAuthor(authorDTO);
+        return ADMIN_AUTHORS_ALL_REDIRECT;
+    }
+
+    @GetMapping("/authors/edit/{id}")
+    public String updateAuthorForm(@PathVariable Long id, Model model) {
+        model.addAttribute(toDTO(authorService.findAuthorById(id)));
+        return ADMIN_AUTHOR_EDIT_PAGE;
+    }
+
+    @GetMapping("/authors/new")
+    public String createAuthorForm(Model model) {
+        model.addAttribute(toDTO(new Author()));
+        return ADMIN_AUTHOR_CREATE_PAGE;
+    }
+
+    @GetMapping("/authors")
+    public String getAllAuthors(Model model) {
+        model.addAttribute("authors", authorListToDTO(authorService.getAllAuthors()));
+        return ADMIN_AUTHORS_ALL_PAGE;
+    }
 
     @PostMapping("/publishers/delete/{id}")
     public String deletePublisher(@PathVariable Long id) {
         publisherService.deletePublisherById(id);
-        return ADMIN_ALL_PUBLISHERS_REDIRECT;
+        return ADMIN_PUBLISHERS_ALL_REDIRECT;
     }
 
     @PostMapping("/publishers/{id}")
-    public String updatePublisher(@PathVariable Long id, @ModelAttribute("publisher") PublisherDTO publisherDTO) {
+    public String updatePublisher(@PathVariable Long id, @ModelAttribute PublisherDTO publisherDTO, BindingResult errors, Model model) {
+        publisherDTOValidator.validate(publisherDTO, errors);
+        if (errors.hasErrors()) {
+            model.addAttribute(publisherDTO);
+            return ADMIN_PUBLISHER_EDIT_PAGE;
+        }
+
         publisherService.updatePublisher(id, publisherDTO);
-        return ADMIN_ALL_PUBLISHERS_REDIRECT;
+        return ADMIN_PUBLISHERS_ALL_REDIRECT;
     }
 
     @GetMapping("/publishers/edit/{id}")
     public String editPublisherForm(@PathVariable Long id, Model model) {
-        model.addAttribute("publisher", toDTO(publisherService.findPublisherById(id)));
-        return ADMIN_EDIT_PUBLISHER_PAGE;
+        model.addAttribute(toDTO(publisherService.findPublisherById(id)));
+        return ADMIN_PUBLISHER_EDIT_PAGE;
     }
 
     @PostMapping("/publishers")
-    public String addNewPublisher(@ModelAttribute("publisher") PublisherDTO publisherDTO) {
+    public String addNewPublisher(@ModelAttribute PublisherDTO publisherDTO, BindingResult errors, Model model) {
+        publisherDTOValidator.validate(publisherDTO, errors);
+        if (errors.hasErrors()) {
+            model.addAttribute(publisherDTO);
+            return ADMIN_PUBLISHER_CREATE_PAGE;
+        }
+
         publisherService.savePublisher(publisherDTO);
-        return ADMIN_ALL_PUBLISHERS_REDIRECT;
+        return ADMIN_PUBLISHERS_ALL_REDIRECT;
     }
 
     @GetMapping("/publishers/new")
     public String createPublisherForm(Model model) {
-        model.addAttribute("publisher", toDTO(new Publisher()));
-        return ADMIN_CREATE_PUBLISHER_PAGE;
+        model.addAttribute(new PublisherDTO());
+        return ADMIN_PUBLISHER_CREATE_PAGE;
     }
 
     @GetMapping("/publishers")
     public String getAllPublishers(Model model) {
         model.addAttribute("publishers", publisherListToDTO(publisherService.getAllPublishers()));
-        return ADMIN_ALL_PUBLISHERS_PAGE;
+        return ADMIN_PUBLISHERS_ALL_PAGE;
     }
 
     @GetMapping("/users")
     public String getAllUsers(Model model) {
         model.addAttribute("users", userListToDTO(userService.getAllUsers()));
-        return ADMIN_ALL_USERS_PAGE;
+        return ADMIN_USERS_ALL_PAGE;
     }
 
     @GetMapping("/users/new")
     public String createUserForm(Model model) {
-        model.addAttribute("user", new UserDTO());
-        return ADMIN_CREATE_USER_PAGE;
+        model.addAttribute(new UserDTO());
+        return ADMIN_USER_CREATE_PAGE;
     }
 
     @PostMapping("/users")
-    public String addNewUser(@ModelAttribute("user") UserDTO userDTO, Model model) {
-        if (validateUser(userDTO, model)) {
-            userService.saveUser(userDTO);
-            return ADMIN_ALL_USERS_REDIRECT;
-        } else {
-            model.addAttribute("user", userDTO);
-            return ADMIN_CREATE_USER_PAGE;
+    public String addNewUser(@ModelAttribute UserDTO userDTO, BindingResult errors, Model model) {
+        userDTOValidator.validate(userDTO, errors);
+        if (errors.hasErrors()) {
+            model.addAttribute(userDTO);
+            return ADMIN_USER_CREATE_PAGE;
         }
 
+        userService.saveUser(userDTO);
+        return ADMIN_USERS_ALL_REDIRECT;
     }
 
     @GetMapping("/users/edit/{id}")
-    public String editUserForm(@PathVariable long id, Model model) {
-        model.addAttribute("user", toDTO(userService.findUserById(id)));
-        return ADMIN_EDIT_USER_PAGE;
+    public String editUserForm(@PathVariable Long id, Model model) {
+        model.addAttribute(toDTO(userService.findUserById(id)));
+        return ADMIN_USER_EDIT_PAGE;
     }
 
     @PostMapping("/users/{id}")
-    public String updateUser(@PathVariable long id, @ModelAttribute("user") UserDTO userDTO, Model model) {
-        if (validateUser(userDTO, model)) {
-            userService.updateUser(id, userDTO);
-            return ADMIN_ALL_USERS_REDIRECT;
-        } else {
-            model.addAttribute("user", userDTO);
-            return ADMIN_EDIT_USER_PAGE;
+    public String updateUser(@PathVariable Long id, @ModelAttribute UserDTO userDTO, BindingResult errors, Model model) {
+        userDTOValidator.validate(userDTO, errors);
+        if (errors.hasErrors()) {
+            model.addAttribute(userDTO);
+            return ADMIN_USER_EDIT_PAGE;
         }
 
+        userService.updateUser(id, userDTO);
+        return ADMIN_USERS_ALL_REDIRECT;
     }
 
     @PostMapping("/users/delete/{id}")
-    public String deleteUser(@PathVariable long id) {
+    public String deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-        return ADMIN_ALL_USERS_REDIRECT;
+        return ADMIN_USERS_ALL_REDIRECT;
     }
 }

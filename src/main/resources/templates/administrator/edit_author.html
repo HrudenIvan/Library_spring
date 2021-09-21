@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title th:text="#{ea.title}">Title</title>
+</head>
+<body>
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+            <h1 class="text-center" th:text="#{ea.head}">Edit author</h1>
+            <div class="card-body">
+                <form th:action="@{/administrator/authors/{id}(id=${authorDTO.id})}" th:object="${authorDTO}"
+                      method="post">
+                    <div class="form-group">
+                        <label for="firstName" th:text="#{c.firstName}">First name</label>
+                        <input id="firstName" type="text" name="firstName" th:field="*{firstName}" class="form-control"
+                               th:placeholder="#{c.firstNamePH}" th:required="required">
+                        <ul>
+                            <li th:each="err : ${#fields.errors('firstName')}" th:text="${err}" style="color:red;">Error</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName" th:text="#{c.lastName}">Last name</label>
+                        <input id="lastName" type="text" name="lastName" th:field="*{lastName}" class="form-control"
+                               th:placeholder="#{c.lastNamePH}" th:required="required">
+                        <ul>
+                            <li th:each="err : ${#fields.errors('lastName')}" th:text="${err}" style="color: red;">Error</li>
+                        </ul>
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-outline-primary mb-3" th:text="#{c.button.submit}">
+                        Submit
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

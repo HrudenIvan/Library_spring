@@ -13,44 +13,56 @@
         <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
             <h1 class="text-center" th:text="#{eu.head}">Edit user</h1>
             <div class="card-body">
-                <form th:action="@{/administrator/users/{id}(id=${user.id})}" th:object="${user}" th:method="post">
+                <form th:action="@{/administrator/users/{id}(id=${userDTO.id})}" th:object="${userDTO}" th:method="post">
                     <div class="form-group">
                         <label for="login" th:text="#{c.login}">Login</label>
                         <input id="login" type="text" name="login" th:field="*{login}" class="form-control"
                                th:placeholder="#{c.loginPH}" th:required="required">
-                        <p style="color: red" th:if="${loginErr}" th:text="#{login.regex}"></p>
+                        <ul>
+                            <li th:each="err : ${#fields.errors('login')}" th:text="${err}" style="color:red;">Error</li>
+                        </ul>
                     </div>
                     <div class="form-group">
                         <label for="firstName" th:text="#{c.firstName}">First name</label>
                         <input id="firstName" type="text" name="firstName" th:field="*{firstName}" class="form-control"
                                th:placeholder="#{c.firstNamePH}" th:required="required">
-                        <p style="color: red" th:if="${firstNameErr}" th:text="#{firstName.empty}"></p>
+                        <ul>
+                            <li th:each="err : ${#fields.errors('firstName')}" th:text="${err}" style="color:red;">Error</li>
+                        </ul>
                     </div>
                     <div class="form-group">
                         <label for="lastName" th:text="#{c.lastName}">Last name</label>
                         <input id="lastName" type="text" name="lastName" th:field="*{lastName}" class="form-control"
                                th:placeholder="#{c.lastNamePH}" th:required="required">
-                        <p style="color: red" th:if="${lastNameErr}" th:text="#{lastName.empty}"></p>
+                        <ul>
+                            <li th:each="err : ${#fields.errors('lastName')}" th:text="${err}" style="color:red;">Error</li>
+                        </ul>
                     </div>
                     <div class="form-group">
                         <label for="password" th:text="#{c.password}">Password</label>
                         <input id="password" type="password" name="password" th:field="*{password}" class="form-control"
                                th:placeholder="#{eu.passwordPH}">
-                        <p style="color: red" th:if="${passwordRegexErr}" th:text="#{password.regex}"></p>
-                        <p style="color: red" th:if="${passwordEqualsErr}" th:text="#{password.equals}"></p>
+                        <ul>
+                            <li th:each="err : ${#fields.errors('password')}" th:text="${err}" style="color:red;">Error</li>
+                        </ul>
                     </div>
                     <div class="form-group">
                         <label for="passwordConfirm" th:text="#{c.passwordConfirm}">Confirm Password</label>
                         <input id="passwordConfirm" type="password" name="passwordConfirm" th:field="*{passwordConfirm}"
                                class="form-control"
                                th:placeholder="#{eu.passwordConfirmPH}">
+                        <ul>
+                            <li th:each="err : ${#fields.errors('passwordConfirm')}" th:text="${err}" style="color:red;">Error</li>
+                        </ul>
                     </div>
                     <div class="form-group">
                         <label for="penalty" th:text="#{c.penalty}">Penalty</label>
                         <input id="penalty" type="text" name="penalty" th:field="*{penalty}"
                                class="form-control"
                                th:placeholder="#{eu.penaltyPH}" th:required="required">
-                        <p style="color: red" th:if="${penaltyErr}" th:text="#{penalty.negative}"></p>
+                        <ul>
+                            <li th:each="err : ${#fields.errors('penalty')}" th:text="${err}" style="color:red;">Error</li>
+                        </ul>
                     </div>
                     <div class="form-group">
                         <label for="userType.id" th:text="#{c.userType}">User type</label>
@@ -67,7 +79,7 @@
                                class="form-check-input">
                     </div>
                     <br>
-                    <button type="submit" class="btn btn-outline-success mb-3" th:text="#{c.button.submit}">
+                    <button type="submit" class="btn btn-outline-primary mb-3" th:text="#{c.button.submit}">
                         Submit
                     </button>
                 </form>
