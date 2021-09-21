@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `library_spring`.`users` (
   `salt` TINYBLOB NOT NULL,
   `first_name` VARCHAR(30) NOT NULL,
   `last_name` VARCHAR(30) NOT NULL,
-  `penalty` DECIMAL NOT NULL DEFAULT 0.0,
+  `penalty` DOUBLE NOT NULL DEFAULT 0.0,
   `is_blocked` BIT NOT NULL DEFAULT 0,
   `user_types_id` INT NOT NULL,
   PRIMARY KEY (`id`),
@@ -250,7 +250,7 @@ INSERT INTO `library_spring`.`authors` VALUES
 -- Add demo information to `library_spring`.`books`
 -- -----------------------------------------------------
 INSERT INTO `library_spring`.`books` VALUES 
-(DEFAULT, 'Тринадцатый сектор', 10, 10, 1, 1, "2000"),
-(DEFAULT, 'Зов припяти', 10, 10, 2, 2, "2001"),
-(DEFAULT, 'Песочные часы', 10, 10, 3, 1, "2010");
+(DEFAULT, 'Тринадцатый сектор', 10, 10, "2000", 1, 1),
+(DEFAULT, 'Зов припяти', 10, 10, "2001", 2, 2),
+(DEFAULT, 'Песочные часы', 10, 10, "2010", 3, 1);
 

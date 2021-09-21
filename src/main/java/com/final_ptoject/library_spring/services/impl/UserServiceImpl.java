@@ -17,9 +17,7 @@ import java.util.List;
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @Service
 public class UserServiceImpl implements UserService {
-
     private UserRepository userRepository;
-    private UserTypeRepository userTypeRepository;
 
     @Override
     public List<User> getAllUsers() {
@@ -57,12 +55,12 @@ public class UserServiceImpl implements UserService {
             user.setSalt(Password.generateSalt());
             user.setPassword(Password.hash(userDTO.getPassword(), user.getSalt()));
         }
-        user.setUserType(userTypeRepository.getById(userDTO.getUserType().getId()));
+        user.setUserType(userDTO.getUserType());
         return userRepository.save(user);
     }
 
     @Override
-    public void deleteUser(Long id) {
-        userRepository.delete(userRepository.getById(id));
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
     }
 }

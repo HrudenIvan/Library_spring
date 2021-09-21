@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title th:text="#{ab.title}">Title</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <h1 class="text-center" th:text="#{ab.head}">List of books</h1>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-3">
+            <a th:href="@{/administrator/books/new}" class="btn btn-outline-success mb-3"
+               th:text="#{c.button.add}">Add</a>
+        </div>
+    </div>
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th th:text="#{c.title}">Title</th>
+            <th th:text="#{c.author.lastName}">Author last name</th>
+            <th th:text="#{c.author.firstName}">Author first name</th>
+            <th th:text="#{c.releaseDate}">Release date</th>
+            <th th:text="#{c.publisher}">Publisher</th>
+            <th th:text="#{c.action}" style="text-align: right;">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.title}">Book title</td>
+            <td th:text="${book.author.lastName}">Author last name</td>
+            <td th:text="${book.author.firstName}">Author first name</td>
+            <td th:text="${book.releaseDate}">Release date</td>
+            <td th:text="${book.publisher.name}">Publisher name</td>
+            <td style="text-align: right">
+                <form th:action="@{/administrator/books/edit/{id}(id=${book.id})}" method="get" class="d-inline">
+                    <button type="submit" class="btn btn-outline-primary d-inline" th:text="#{c.button.edit}">Edit
+                    </button>
+                </form>
+                <form th:action="@{/administrator/books/delete/{id}(id=${book.id})}" method="post"
+                      class="d-inline ">
+                    <button type="submit" class="btn btn-outline-danger d-inline" th:text="#{c.button.delete}">Delete
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

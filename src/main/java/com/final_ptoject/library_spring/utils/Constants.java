@@ -21,4 +21,9 @@ public class Constants {
     public static final String ADMIN_AUTHORS_ALL_REDIRECT = "redirect:/administrator/authors";
     public static final String ADMIN_AUTHOR_CREATE_PAGE = "/administrator/create_author";
     public static final String ADMIN_AUTHOR_EDIT_PAGE = "/administrator/edit_author";
+    //Books
+    public static final String ADMIN_BOOKS_ALL_PAGE = "/administrator/all_books";
+    public static final String ADMIN_BOOKS_ALL_REDIRECT = "redirect:/administrator/books";
+    public static final String ADMIN_BOOKS_CREATE_PAGE = "/administrator/create_book";
+    public static final String ADMIN_BOOKS_EDIT_PAGE = "/administrator/edit_book";
 }

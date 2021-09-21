@@ -1,13 +1,15 @@
 package com.final_ptoject.library_spring.controllers;
 
 import com.final_ptoject.library_spring.dto.AuthorDTO;
+import com.final_ptoject.library_spring.dto.BookDTO;
 import com.final_ptoject.library_spring.dto.PublisherDTO;
 import com.final_ptoject.library_spring.dto.UserDTO;
-import com.final_ptoject.library_spring.entities.Author;
 import com.final_ptoject.library_spring.services.AuthorService;
+import com.final_ptoject.library_spring.services.BookService;
 import com.final_ptoject.library_spring.services.PublisherService;
 import com.final_ptoject.library_spring.services.UserService;
 import com.final_ptoject.library_spring.validators.AuthorDTOValidator;
+import com.final_ptoject.library_spring.validators.BookDTOValidator;
 import com.final_ptoject.library_spring.validators.PublisherDTOValidator;
 import com.final_ptoject.library_spring.validators.UserDTOValidator;
 import lombok.AllArgsConstructor;
@@ -29,10 +31,70 @@ public class AdministratorController {
     private UserService userService;
     private PublisherService publisherService;
     private AuthorService authorService;
+    private BookService bookService;
     private AuthorDTOValidator authorDTOValidator;
     private UserDTOValidator userDTOValidator;
     private PublisherDTOValidator publisherDTOValidator;
+    private BookDTOValidator bookDTOValidator;
 
+    @PostMapping("/books/delete/{id}")
+    public String deleteBookById(@PathVariable Long id) {
+        bookService.deleteBookById(id);
+        return ADMIN_BOOKS_ALL_REDIRECT;
+    }
+
+    @PostMapping("/books/{id}")
+    public String updateBook(@PathVariable Long id, @ModelAttribute BookDTO bookDTO, BindingResult errors, Model model) {
+        bookDTOValidator.validate(bookDTO, errors);
+        if (errors.hasErrors()) {
+            model.addAttribute(bookDTO);
+            model.addAttribute("authors", authorListToDTO(authorService.getAllAuthors()));
+            model.addAttribute("publishers", publisherListToDTO(publisherService.getAllPublishers()));
+            return ADMIN_BOOKS_EDIT_PAGE;
+        }
+
+        int delta = bookDTO.getQuantity() - bookDTO.getQuantityOld();
+        bookDTO.setAvailable(bookDTO.getAvailable() + delta);
+        bookService.updateBook(id, bookDTO);
+        return ADMIN_BOOKS_ALL_REDIRECT;
+    }
+
+    @PostMapping("/books")
+    public String addNewBook(@ModelAttribute BookDTO bookDTO, BindingResult errors, Model model) {
+        bookDTOValidator.validate(bookDTO, errors);
+        if (errors.hasErrors()) {
+            model.addAttribute(bookDTO);
+            model.addAttribute("authors", authorListToDTO(authorService.getAllAuthors()));
+            model.addAttribute("publishers", publisherListToDTO(publisherService.getAllPublishers()));
+            return ADMIN_BOOKS_CREATE_PAGE;
+        }
+
+        bookDTO.setAvailable(bookDTO.getQuantity());
+        bookService.saveBook(bookDTO);
+        return ADMIN_BOOKS_ALL_REDIRECT;
+    }
+
+    @GetMapping("/books/edit/{id}")
+    public String bookEditForm(@PathVariable Long id, Model model) {
+        model.addAttribute(toDTO(bookService.findBookById(id)));
+        model.addAttribute("authors", authorListToDTO(authorService.getAllAuthors()));
+        model.addAttribute("publishers", publisherListToDTO(publisherService.getAllPublishers()));
+        return ADMIN_BOOKS_EDIT_PAGE;
+    }
+
+    @GetMapping("/books/new")
+    public String bookCreateForm(Model model) {
+        model.addAttribute(new BookDTO());
+        model.addAttribute("authors", authorListToDTO(authorService.getAllAuthors()));
+        model.addAttribute("publishers", publisherListToDTO(publisherService.getAllPublishers()));
+        return ADMIN_BOOKS_CREATE_PAGE;
+    }
+
+    @GetMapping("/books")
+    public String allBooksPage(Model model) {
+        model.addAttribute("books", bookListToDTO(bookService.getAllBooks()));
+        return ADMIN_BOOKS_ALL_PAGE;
+    }
 
     @PostMapping("/authors/delete/{id}")
     public String deleteAuthor(@PathVariable Long id) {
@@ -53,7 +115,7 @@ public class AdministratorController {
     }
 
     @PostMapping("/authors")
-    public String saveAuthor(@ModelAttribute AuthorDTO authorDTO, BindingResult errors, Model model) {
+    public String addNewAuthor(@ModelAttribute AuthorDTO authorDTO, BindingResult errors, Model model) {
         authorDTOValidator.validate(authorDTO, errors);
         if (errors.hasErrors()) {
             model.addAttribute(authorDTO);
@@ -72,7 +134,7 @@ public class AdministratorController {
 
     @GetMapping("/authors/new")
     public String createAuthorForm(Model model) {
-        model.addAttribute(toDTO(new Author()));
+        model.addAttribute(new AuthorDTO());
         return ADMIN_AUTHOR_CREATE_PAGE;
     }
 
@@ -174,7 +236,7 @@ public class AdministratorController {
 
     @PostMapping("/users/delete/{id}")
     public String deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+        userService.deleteUserById(id);
         return ADMIN_USERS_ALL_REDIRECT;
     }
 }

@@ -29,6 +29,6 @@ public class User {
     @Column(name = "salt", nullable = false, length = 32)
     private byte[] salt;
     @ManyToOne
-    @JoinColumn(name = "user_types_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_types_id", referencedColumnName = "id", nullable = false)
     private UserType userType;
 }

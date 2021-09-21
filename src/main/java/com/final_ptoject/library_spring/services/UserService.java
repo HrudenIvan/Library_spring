@@ -14,5 +14,5 @@ public interface UserService {
 
     User updateUser(Long id, UserDTO userDTO);
 
-    void deleteUser(Long id);
+    void deleteUserById(Long id);
 }

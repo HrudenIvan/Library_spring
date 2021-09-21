@@ -1,9 +1,11 @@
 package com.final_ptoject.library_spring.utils;
 
 import com.final_ptoject.library_spring.dto.AuthorDTO;
+import com.final_ptoject.library_spring.dto.BookDTO;
 import com.final_ptoject.library_spring.dto.PublisherDTO;
 import com.final_ptoject.library_spring.dto.UserDTO;
 import com.final_ptoject.library_spring.entities.Author;
+import com.final_ptoject.library_spring.entities.Book;
 import com.final_ptoject.library_spring.entities.Publisher;
 import com.final_ptoject.library_spring.entities.User;
 
@@ -13,6 +15,20 @@ import java.util.stream.Collectors;
 public class DTOHelper {
 
     private DTOHelper() {
+    }
+
+    public static BookDTO toDTO(Book book) {
+        return BookDTO
+                .builder()
+                .id(book.getId())
+                .title(book.getTitle())
+                .quantity(book.getQuantity())
+                .quantityOld(book.getQuantity())
+                .available(book.getAvailable())
+                .releaseDate(book.getReleaseDate())
+                .author(book.getAuthor())
+                .publisher(book.getPublisher())
+                .build();
     }
 
     public static AuthorDTO toDTO(Author author) {
@@ -57,4 +73,7 @@ public class DTOHelper {
         return authors.stream().map(DTOHelper::toDTO).collect(Collectors.toList());
     }
 
+    public static List<BookDTO> bookListToDTO(List<Book> books) {
+        return books.stream().map(DTOHelper::toDTO).collect(Collectors.toList());
+    }
 }

@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PublisherDTO {
-    private long id;
+    private long id=0;
     private String name;
 }
