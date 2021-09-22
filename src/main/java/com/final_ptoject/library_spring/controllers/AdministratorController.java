@@ -15,6 +15,8 @@ import com.final_ptoject.library_spring.validators.UserDTOValidator;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,6 +38,14 @@ public class AdministratorController {
     private UserDTOValidator userDTOValidator;
     private PublisherDTOValidator publisherDTOValidator;
     private BookDTOValidator bookDTOValidator;
+
+    @GetMapping
+    public String adminPage(Model model) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String login = ((UserDetails) principal).getUsername();
+        model.addAttribute("userDTO", userService.findUserByLogin(login));
+        return ADMIN_PAGE;
+    }
 
     @PostMapping("/books/delete/{id}")
     public String deleteBookById(@PathVariable Long id) {

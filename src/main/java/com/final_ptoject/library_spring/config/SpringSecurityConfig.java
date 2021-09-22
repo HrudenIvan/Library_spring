@@ -1,40 +1,60 @@
 package com.final_ptoject.library_spring.config;
 
+import com.final_ptoject.library_spring.handlers.AppAuthenticationSuccessHandler;
+import com.final_ptoject.library_spring.services.impl.AppUserDetailsService;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+@NoArgsConstructor
+@AllArgsConstructor(onConstructor_ = {@Autowired})
 @Configuration
+@EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+    AppUserDetailsService appUserDetailsService;
+    PasswordEncoder passwordEncoder;
 
-    // Create 2 users for demo
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-        auth.inMemoryAuthentication()
-                .withUser("templates/user").password("{noop}password").roles("USER")
-                .and()
-                .withUser("admin").password("{noop}password").roles("USER", "ADMIN");
-
+        auth.userDetailsService(appUserDetailsService).passwordEncoder(passwordEncoder);
     }
 
-    // Secure the endpoins with HTTP Basic authentication
-    /*@Override
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http
-                //HTTP Basic authentication
-                .httpBasic()
-                .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/users/**").hasRole("USER")
-                .antMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/users/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PATCH, "/users/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
+                    .antMatchers("/","/registration").permitAll()
+                    .antMatchers("/administrator/**").hasRole("ADMIN")
+                    .antMatchers("/librarian/**").hasRole("LIBRARIAN")
+                    .antMatchers("/user/**").hasRole("USER")
+                    .anyRequest().authenticated()
                 .and()
-                .csrf().disable()
-                .formLogin().disable();
-    }*/
+                .formLogin()
+                    .loginPage("/login")
+                    .permitAll()
+                    .usernameParameter("login")
+                    .passwordParameter("password")
+                    .failureUrl("/login?error")
+                    .successHandler(appAuthenticationSuccessHandler())
+                .and()
+                .logout()
+                    .logoutUrl("/logout")
+                    .permitAll()
+                    .invalidateHttpSession(true)
+                    .clearAuthentication(true)
+                    .logoutSuccessUrl("/");
+    }
 
+    @Bean
+    public AuthenticationSuccessHandler appAuthenticationSuccessHandler() {
+        return new AppAuthenticationSuccessHandler();
+    }
 }

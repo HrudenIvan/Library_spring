@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title th:text="#{a.title}">Title</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <h1 class="text-center" th:text="#{a.head}">Administrator page</h1>
+    </div>
+    <br>
+    <table>
+        <tbody>
+        <tr>
+            <th th:text="#{c.firstName}">First name</th>
+            <td th:text="${userDTO.firstName}">Name</td>
+        </tr>
+        <tr>
+            <th th:text="#{c.lastName}">Last name</th>
+            <td th:text="${userDTO.lastName}">Surname</td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <table class="table">
+        <thead class="table-dark">
+        <tr>
+            <th th:text="#{a.users}">Users menu</th>
+            <th th:text="#{a.books}">Books menu</th>
+            <th th:text="#{a.authors}">Authors menu</th>
+            <th th:text="#{a.publishers}">Publishers menu</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <ul>
+                    <li><a th:href="@{/administrator/users}" th:text="#{au.head}">Users list</a></li>
+                    <li><a th:href="@{/administrator/users/new}" th:text="#{cu.head}">Create new user</a></li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li><a th:href="@{/administrator/books}" th:text="#{ab.head}">Books list</a></li>
+                    <li><a th:href="@{/administrator/books/new}" th:text="#{cb.head}">Create new book</a></li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li><a th:href="@{/administrator/authors}" th:text="#{aa.head}">Authors list</a></li>
+                    <li><a th:href="@{/administrator/authors/new}" th:text="#{ca.head}">Create new author</a></li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li><a th:href="@{/administrator/publishers}" th:text="#{ap.head}">Publishers list</a></li>
+                    <li><a th:href="@{/administrator/publishers/new}" th:text="#{cp.head}">Create new publisher</a></li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

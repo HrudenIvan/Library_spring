@@ -24,10 +24,8 @@ public class User {
     private double penalty;
     @Column(name = "is_blocked", nullable = false)
     private boolean blocked;
-    @Column(name = "password", nullable = false, length = 32)
-    private byte[] password;
-    @Column(name = "salt", nullable = false, length = 32)
-    private byte[] salt;
+    @Column(name = "password", nullable = false, length = 60)
+    private String password;
     @ManyToOne
     @JoinColumn(name = "user_types_id", referencedColumnName = "id", nullable = false)
     private UserType userType;

@@ -3,12 +3,12 @@ package com.final_ptoject.library_spring.services.impl;
 import com.final_ptoject.library_spring.dto.UserDTO;
 import com.final_ptoject.library_spring.entities.User;
 import com.final_ptoject.library_spring.repositories.UserRepository;
-import com.final_ptoject.library_spring.repositories.UserTypeRepository;
 import com.final_ptoject.library_spring.services.UserService;
-import com.final_ptoject.library_spring.utils.Password;
+import com.final_ptoject.library_spring.utils.DTOHelper;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +18,7 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<User> getAllUsers() {
@@ -32,8 +33,7 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userDTO.getLastName());
         user.setPenalty(userDTO.getPenalty());
         user.setBlocked(userDTO.isBlocked());
-        user.setSalt(Password.generateSalt());
-        user.setPassword(Password.hash(userDTO.getPassword(), user.getSalt()));
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setUserType(userDTO.getUserType());
         return userRepository.save(user);
     }
@@ -52,8 +52,7 @@ public class UserServiceImpl implements UserService {
         user.setPenalty(userDTO.getPenalty());
         user.setBlocked(userDTO.isBlocked());
         if (!userDTO.getPassword().isEmpty()) {
-            user.setSalt(Password.generateSalt());
-            user.setPassword(Password.hash(userDTO.getPassword(), user.getSalt()));
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
         user.setUserType(userDTO.getUserType());
         return userRepository.save(user);
@@ -62,5 +61,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public UserDTO findUserByLogin(String login) {
+        return userRepository.findUserByLogin(login).map(DTOHelper::toDTO).orElse(null);
     }
 }

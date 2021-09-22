@@ -10,12 +10,12 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class UserDTO {
-    private long id=0;
+    private long id;
     private String login;
     private String firstName;
     private String lastName;
-    private double penalty = 0.0;
-    private boolean blocked = false;
+    private double penalty;
+    private boolean blocked;
     private String password;
     private String passwordConfirm;
     private UserType userType;

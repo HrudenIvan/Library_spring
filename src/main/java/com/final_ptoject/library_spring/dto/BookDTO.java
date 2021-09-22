@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookDTO {
-    private long id=0;
+    private long id;
     private String title;
     private int quantity;
     private int quantityOld;

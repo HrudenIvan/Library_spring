@@ -14,6 +14,9 @@
     <a th:href="@{${#httpServletRequest.requestURI}(lang='ru')}">
         <i>RU</i>
     </a>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">logout</button>
+    </form>
     <br>
     <div class="row">
         <h1 class="text-center" th:text="#{au.head}">List of users</h1>
