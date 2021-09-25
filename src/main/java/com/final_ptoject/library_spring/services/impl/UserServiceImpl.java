@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.final_ptoject.library_spring.utils.DTOHelper.userListToDTO;
+
 @NoArgsConstructor
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @Service
@@ -66,5 +68,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO findUserByLogin(String login) {
         return userRepository.findUserByLogin(login).map(DTOHelper::toDTO).orElse(null);
+    }
+
+    @Override
+    public List<UserDTO> findUsersWithOpenOrders() {
+        return userListToDTO(userRepository.getUsersWithOpenOrders());
     }
 }

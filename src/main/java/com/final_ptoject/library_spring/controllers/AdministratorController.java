@@ -30,6 +30,8 @@ import static com.final_ptoject.library_spring.utils.DTOHelper.*;
 @Controller
 @RequestMapping("/administrator")
 public class AdministratorController {
+    public static final String AUTHORS_ALIAS = "authors";
+    public static final String PUBLISHERS_ALIAS = "publishers";
     private UserService userService;
     private PublisherService publisherService;
     private AuthorService authorService;
@@ -58,8 +60,8 @@ public class AdministratorController {
         bookDTOValidator.validate(bookDTO, errors);
         if (errors.hasErrors()) {
             model.addAttribute(bookDTO);
-            model.addAttribute("authors", authorListToDTO(authorService.getAllAuthors()));
-            model.addAttribute("publishers", publisherListToDTO(publisherService.getAllPublishers()));
+            model.addAttribute(AUTHORS_ALIAS, authorListToDTO(authorService.getAllAuthors()));
+            model.addAttribute(PUBLISHERS_ALIAS, publisherListToDTO(publisherService.getAllPublishers()));
             return ADMIN_BOOKS_EDIT_PAGE;
         }
 
@@ -74,8 +76,8 @@ public class AdministratorController {
         bookDTOValidator.validate(bookDTO, errors);
         if (errors.hasErrors()) {
             model.addAttribute(bookDTO);
-            model.addAttribute("authors", authorListToDTO(authorService.getAllAuthors()));
-            model.addAttribute("publishers", publisherListToDTO(publisherService.getAllPublishers()));
+            model.addAttribute(AUTHORS_ALIAS, authorListToDTO(authorService.getAllAuthors()));
+            model.addAttribute(PUBLISHERS_ALIAS, publisherListToDTO(publisherService.getAllPublishers()));
             return ADMIN_BOOKS_CREATE_PAGE;
         }
 
@@ -87,16 +89,16 @@ public class AdministratorController {
     @GetMapping("/books/edit/{id}")
     public String bookEditForm(@PathVariable Long id, Model model) {
         model.addAttribute(toDTO(bookService.findBookById(id)));
-        model.addAttribute("authors", authorListToDTO(authorService.getAllAuthors()));
-        model.addAttribute("publishers", publisherListToDTO(publisherService.getAllPublishers()));
+        model.addAttribute(AUTHORS_ALIAS, authorListToDTO(authorService.getAllAuthors()));
+        model.addAttribute(PUBLISHERS_ALIAS, publisherListToDTO(publisherService.getAllPublishers()));
         return ADMIN_BOOKS_EDIT_PAGE;
     }
 
     @GetMapping("/books/new")
     public String bookCreateForm(Model model) {
         model.addAttribute(new BookDTO());
-        model.addAttribute("authors", authorListToDTO(authorService.getAllAuthors()));
-        model.addAttribute("publishers", publisherListToDTO(publisherService.getAllPublishers()));
+        model.addAttribute(AUTHORS_ALIAS, authorListToDTO(authorService.getAllAuthors()));
+        model.addAttribute(PUBLISHERS_ALIAS, publisherListToDTO(publisherService.getAllPublishers()));
         return ADMIN_BOOKS_CREATE_PAGE;
     }
 
@@ -150,7 +152,7 @@ public class AdministratorController {
 
     @GetMapping("/authors")
     public String getAllAuthors(Model model) {
-        model.addAttribute("authors", authorListToDTO(authorService.getAllAuthors()));
+        model.addAttribute(AUTHORS_ALIAS, authorListToDTO(authorService.getAllAuthors()));
         return ADMIN_AUTHORS_ALL_PAGE;
     }
 
@@ -198,7 +200,7 @@ public class AdministratorController {
 
     @GetMapping("/publishers")
     public String getAllPublishers(Model model) {
-        model.addAttribute("publishers", publisherListToDTO(publisherService.getAllPublishers()));
+        model.addAttribute(PUBLISHERS_ALIAS, publisherListToDTO(publisherService.getAllPublishers()));
         return ADMIN_PUBLISHERS_ALL_PAGE;
     }
 

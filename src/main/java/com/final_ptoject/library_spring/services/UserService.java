@@ -17,4 +17,6 @@ public interface UserService {
     void deleteUserById(Long id);
 
     UserDTO findUserByLogin(String login);
+
+    List<UserDTO> findUsersWithOpenOrders();
 }

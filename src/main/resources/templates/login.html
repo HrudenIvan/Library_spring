@@ -7,6 +7,7 @@
     <title th:text="#{l.title}">Login</title>
 </head>
 <body>
+<div th:insert="navbars/guest_navbar :: navbar">Navbar</div>
 <br>
 <div class="container">
     <div class="row">
@@ -29,7 +30,7 @@
                     </div>
                     <br>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-lg btn-block" th:text="#{l.button}">
+                        <button type="submit" class="btn btn-outline-secondary btn-lg btn-block" th:text="#{l.button}">
                             Log in
                         </button>
                     </div>

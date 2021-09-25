@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title th:text="#{up.title}">Private cabinet</title>
+</head>
+<body>
+<div th:insert="navbars/user_navbar :: navbar">Navbar</div>
+<br>
+<div class="container">
+    <div class="row">
+        <h1 class="text-center" th:text="#{up.head}">Private cabinet</h1>
+    </div>
+    <br>
+    <table>
+        <tbody>
+        <tr>
+            <th th:text="#{c.login}">Login</th>
+            <td th:text="${userDTO.login}">Login</td>
+        </tr>
+        <tr>
+            <th th:text="#{c.firstName}">First name</th>
+            <td th:text="${userDTO.firstName}">Name</td>
+        </tr>
+        <tr>
+            <th th:text="#{c.lastName}">Last name</th>
+            <td th:text="${userDTO.lastName}">Surname</td>
+        </tr>
+        <tr>
+            <th th:text="#{c.penalty}">Penalty</th>
+            <td th:text="${userDTO.penalty}">Penalty</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="row">
+        <h1 class="text-center" th:text="#{up.head1}">Books in use</h1>
+    </div>
+    <br>
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th th:text="#{c.title}">Title</th>
+            <th th:text="#{c.author}">Author</th>
+            <th th:text="#{c.orderDate}">Order date</th>
+            <th th:text="#{c.openDate}">Open date</th>
+            <th th:text="#{c.closeDate}">Close date</th>
+            <th th:text="#{c.orderType}">Order type</th>
+            <th th:text="#{c.orderStatus}">Order status</th>
+            <th th:text="#{c.penalty}">Penalty</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="bookOrder : ${bookOrders}">
+            <td th:text="${bookOrder.book.title}">Book title</td>
+            <td th:text="${bookOrder.book.author.lastName} + ' ' + ${bookOrder.book.author.firstName}">Author</td>
+            <td th:text="${#temporals.format(bookOrder.orderDate, 'dd.MM.yyyy HH:mm')}">Order date</td>
+            <td th:text="${#temporals.format(bookOrder.openDate, 'dd.MM.yyyy')}">Open date</td>
+            <td th:text="${#temporals.format(bookOrder.closeDate, 'dd.MM.yyyy')}">Close date</td>
+            <td th:text="${bookOrder.getOrderType().type}">Order type</td>
+            <td th:text="${bookOrder.orderStatus.status}">Order status</td>
+            <td th:text="${bookOrder.penalty}">Penalty</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

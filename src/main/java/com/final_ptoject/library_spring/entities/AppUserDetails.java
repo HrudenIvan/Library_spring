@@ -9,17 +9,23 @@ import java.util.Collection;
 import java.util.List;
 
 public class AppUserDetails implements UserDetails {
+    private final long id;
     private final String login;
     private final String password;
     private final boolean blocked;
     private final List<GrantedAuthority> authorities;
 
     public AppUserDetails(User user) {
+        id = user.getId();
         login = user.getLogin();
         password = user.getPassword();
         blocked = user.isBlocked();
         authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getUserType().getType().toUpperCase()));
+    }
+
+    public long getId() {
+        return id;
     }
 
     @Override

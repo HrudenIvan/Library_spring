@@ -1,13 +1,7 @@
 package com.final_ptoject.library_spring.utils;
 
-import com.final_ptoject.library_spring.dto.AuthorDTO;
-import com.final_ptoject.library_spring.dto.BookDTO;
-import com.final_ptoject.library_spring.dto.PublisherDTO;
-import com.final_ptoject.library_spring.dto.UserDTO;
-import com.final_ptoject.library_spring.entities.Author;
-import com.final_ptoject.library_spring.entities.Book;
-import com.final_ptoject.library_spring.entities.Publisher;
-import com.final_ptoject.library_spring.entities.User;
+import com.final_ptoject.library_spring.dto.*;
+import com.final_ptoject.library_spring.entities.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +9,25 @@ import java.util.stream.Collectors;
 public class DTOHelper {
 
     private DTOHelper() {
+    }
+
+    public static BookOrderDTO toDTO(BookOrder bookOrder) {
+        BookOrderDTO bookOrderDTO = BookOrderDTO
+                .builder()
+                .id(bookOrder.getId())
+                .orderDate(bookOrder.getOrderDate())
+                .openDate(bookOrder.getOpenDate())
+                .closeDate(bookOrder.getCloseDate())
+                .oldCloseDate(bookOrder.getCloseDate())
+                .returnDate(bookOrder.getReturnDate())
+                .orderType(bookOrder.getOrderType())
+                .orderStatus(bookOrder.getOrderStatus())
+                .oldOrderStatusId(bookOrder.getOrderStatus().getId())
+                .user(bookOrder.getUser())
+                .book(bookOrder.getBook())
+                .build();
+        bookOrderDTO.calculatePenalty();
+        return bookOrderDTO;
     }
 
     public static BookDTO toDTO(Book book) {
@@ -75,5 +88,9 @@ public class DTOHelper {
 
     public static List<BookDTO> bookListToDTO(List<Book> books) {
         return books.stream().map(DTOHelper::toDTO).collect(Collectors.toList());
+    }
+
+    public static List<BookOrderDTO> bookOrderListToDTO(List<BookOrder> bookOrders) {
+        return bookOrders.stream().map(DTOHelper::toDTO).collect(Collectors.toList());
     }
 }

@@ -181,6 +181,19 @@ CREATE TABLE IF NOT EXISTS `library_spring`.`users_books` (
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
+DROP TRIGGER IF EXISTS `library_spring`.`books_BEFORE_UPDATE`;
+
+DELIMITER $$
+USE `library_spring`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `library_spring`.`books_BEFORE_UPDATE` BEFORE UPDATE ON `books` FOR EACH ROW
+BEGIN
+	IF NEW.available<0 then
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'There is no available book';
+END IF;
+END$$
+DELIMITER ;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -209,7 +222,7 @@ INSERT INTO `library_spring`.`users` VALUES
 	'Татьяна', 'Грудень', DEFAULT, DEFAULT, 2),
 	(DEFAULT, 'GruV',
 	'$2a$10$j4rElTY6vRsOi8JN7w6T1.UhCHXo5h/vsFGXdhpPn3YvNPE7dtAMa',
-	'Грудень', 'Иван', DEFAULT, DEFAULT, 3);
+     'Иван', 'Грудень', DEFAULT, DEFAULT, 3);
 	
 	-- -----------------------------------------------------
 -- Add information to `library_spring`.`order_statuses`

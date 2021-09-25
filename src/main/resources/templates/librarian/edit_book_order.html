@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title th:text="#{ebo.title}">Title</title>
+</head>
+<body>
+<div th:insert="navbars/librarian_navbar :: navbar">Navbar</div>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+            <h1 class="text-center" th:text="#{ebo.head}">Edit book order</h1>
+            <div class="card-body">
+                <form th:action="@{/librarian/orders/edit/{id}(id=${bookOrderDTO.id})}" th:object="${bookOrderDTO}"
+                      method="post">
+                    <input type="hidden" th:field="*{user.id}">
+                    <input type="hidden" th:field="*{book.id}">
+                    <input type="hidden" th:field="*{orderType.id}">
+                    <input type="hidden" th:field="*{oldOrderStatusId}">
+                    <input type="hidden" th:field="*{oldCloseDate}">
+                    <h6 class="text-center" th:text="#{c.user}">User</h6>
+                    <div class="form-group">
+                        <label for="login" th:text="#{c.login}">Login</label>
+                        <input id="login" type="text" name="login" th:field="*{user.login}"
+                               class="form-control"
+                               readonly>
+                    </div>
+                    <div class="form-group">
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <input type="text" name="lastName" th:field="*{user.lastName}" class="form-control"
+                                           readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="firstName" th:field="*{user.firstName}"
+                                           class="form-control" readonly>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <h6 class="text-center" th:text="#{ebo.book}">Book</h6>
+                    <div class="form-group">
+                        <label for="title" th:text="#{c.title}">Title</label>
+                        <input id="title" type="text" name="title" th:value="${bookOrderDTO.book.title}"
+                               class="form-control"
+                               readonly>
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{c.author}">Author</label>
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <input type="text" name="lastName" th:field="*{book.author.lastName}"
+                                           class="form-control" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="firstName" th:field="*{book.author.firstName}"
+                                           class="form-control" readonly>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="form-group">
+                        <label for="releaseDate" th:text="#{c.releaseDate}">Release date</label>
+                        <input id="releaseDate" type="text" name="releaseDate"
+                               th:field="*{book.releaseDate}"
+                               class="form-control" readonly>
+                    </div>
+                    <h6 class="text-center" th:text="#{ebo.bookOrder}">Book order</h6>
+                    <div class="form-group">
+                        <label for="type" th:text="#{c.orderType}">Order type</label>
+                        <input id="type" type="text" th:field="*{orderType.type}"
+                               class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="openDate" th:text="#{c.openDate}">Open date</label>
+                        <input id="openDate" type="date" name="openDate" th:field="*{openDate}"
+                               class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="closeDate" th:text="#{ebo.closeDate}">Close date</label>
+                        <input id="closeDate" type="date" name="closeDate" th:field="*{closeDate}"
+                               class="form-control">
+                    </div>
+                    <ul>
+                        <li th:each="err : ${#fields.errors('closeDate')}" th:text="${err}" style="color: red;">Error
+                        </li>
+                    </ul>
+                    <div class="form-group">
+                        <label for="orderStatus" th:text="#{c.orderStatus}">Order status</label>
+                        <select id="orderStatus" class="form-control" name="orderStatus" th:field="*{orderStatus.id}">
+                            <option th:value="1" th:text="#{ebo.new}">New</option>
+                            <option th:value="2" th:text="#{ebo.ready}">Ready</option>
+                            <option th:value="3" th:text="#{ebo.open}">Open</option>
+                            <option th:value="4" th:text="#{ebo.closed}">Closed</option>
+                        </select>
+                        <ul>
+                            <li th:each="err : ${#fields.errors('orderStatus')}" th:text="${err}" style="color: red;">
+                                Error
+                            </li>
+                        </ul>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary mb-3" th:text="#{c.button.edit}">
+                        Edit
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
