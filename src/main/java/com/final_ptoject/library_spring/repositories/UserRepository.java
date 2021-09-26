@@ -1,6 +1,8 @@
 package com.final_ptoject.library_spring.repositories;
 
 import com.final_ptoject.library_spring.entities.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE User u SET u.penalty = u.penalty + ?2 WHERE u.id = ?1")
     void updateUserPenalty(Long id, double penalty);
+
+    @Query("SELECT DISTINCT u FROM User u JOIN BookOrder bo ON u.id = bo.user.id WHERE bo.orderStatus.id = 2 OR bo.orderStatus.id = 3")
+    Page<User> getUsersWithOpenOrdersPageable(Pageable pageable);
 }

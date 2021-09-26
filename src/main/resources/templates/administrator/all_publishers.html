@@ -27,7 +27,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="publisher : ${publishers}">
+            <tr th:each="publisher : ${currentPage}">
                 <td th:text="${publisher.name}">Name</td>
                 <td style="text-align: right">
                     <form th:action="@{/administrator/publishers/edit/{id}(id=${publisher.id})}" method="get"
@@ -45,6 +45,7 @@
             </tr>
             </tbody>
         </table>
+        <div th:insert="navbars/pagination_nav :: pagination">Pagination navbar</div>
     </div>
 </div>
 </body>

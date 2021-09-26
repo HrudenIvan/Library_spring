@@ -57,15 +57,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="bookOrder : ${newBookOrders}">
+                <tr th:each="bookOrder : ${currentPage}">
                     <td th:text="${#temporals.format(bookOrder.orderDate, 'dd.MM.yyyy HH:mm')}">Order date</td>
                     <td th:text="${bookOrder.orderType.type}">Order type</td>
                     <td style="text-align: right;">
-                        <a th:href="@{/librarian/orders/edit/{id}(id=${bookOrder.id})}" th:text="#{c.button.edit}" class="btn btn-outline-primary">Edit</a>
+                        <a th:href="@{/librarian/orders/edit/{id}(id=${bookOrder.id})}" th:text="#{c.button.edit}"
+                           class="btn btn-outline-primary">Edit</a>
                     </td>
                 </tr>
                 </tbody>
             </table>
+            <div th:insert="navbars/pagination_nav :: pagination">Pagination navbar</div>
         </div>
         <div id="right">
             <h3 class="text-center" th:text="#{lp.headRight}">Users list with open book orders</h3>
@@ -79,15 +81,25 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="user : ${users}">
+                <tr th:each="user : ${usersCurrentPage}">
                     <td th:text="${user.login}">Login</td>
                     <td th:text="${user.lastName} + ' ' + ${user.firstName}">User</td>
                     <td style="text-align: right;">
-                        <a th:href="@{/librarian/subscriptions/{id}(id=${user.id})}" th:text="#{lp.button}" class="btn btn-outline-primary">Open</a>
+                        <a th:href="@{/librarian/subscriptions/{id}(id=${user.id})}" th:text="#{lp.button}"
+                           class="btn btn-outline-primary">Open</a>
                     </td>
                 </tr>
                 </tbody>
             </table>
+            <nav th:if="${usersCurrentPage.totalPages > 1}">
+                <ul class="pagination pagination-lg">
+                    <li th:each="pageNumber : ${usersPageNumbers}" th:class="${pageNumber==usersCurrentPage.number + 1} ? 'page-item active' : 'page-item'">
+                        <a class="page-link" th:href="@{${#httpServletRequest.requestURI}(pageUser=${pageNumber})}"
+                           th:if="${pageNumber!=usersCurrentPage.number + 1}" th:text="${pageNumber}">link</a>
+                        <span class="page-link" th:if="${pageNumber==usersCurrentPage.number + 1}" th:text="${pageNumber}">link</span>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

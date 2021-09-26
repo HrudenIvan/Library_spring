@@ -7,6 +7,9 @@ import com.final_ptoject.library_spring.services.PublisherService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,5 +46,10 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public void deletePublisherById(Long id) {
         publisherRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Publisher> getAllPublishersPageable(Integer page, Integer size) {
+        return publisherRepository.findAll(PageRequest.of(page, size, Sort.by("name")));
     }
 }

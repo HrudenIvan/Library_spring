@@ -4,12 +4,14 @@ import com.final_ptoject.library_spring.dto.AuthorDTO;
 import com.final_ptoject.library_spring.dto.BookDTO;
 import com.final_ptoject.library_spring.dto.PublisherDTO;
 import com.final_ptoject.library_spring.dto.UserDTO;
+import com.final_ptoject.library_spring.entities.Author;
 import com.final_ptoject.library_spring.entities.Book;
+import com.final_ptoject.library_spring.entities.Publisher;
+import com.final_ptoject.library_spring.entities.User;
 import com.final_ptoject.library_spring.services.AuthorService;
 import com.final_ptoject.library_spring.services.BookService;
 import com.final_ptoject.library_spring.services.PublisherService;
 import com.final_ptoject.library_spring.services.UserService;
-import com.final_ptoject.library_spring.utils.Pagination;
 import com.final_ptoject.library_spring.validators.AuthorDTOValidator;
 import com.final_ptoject.library_spring.validators.BookDTOValidator;
 import com.final_ptoject.library_spring.validators.PublisherDTOValidator;
@@ -28,13 +30,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static com.final_ptoject.library_spring.utils.Constants.*;
 import static com.final_ptoject.library_spring.utils.DTOHelper.*;
+import static com.final_ptoject.library_spring.utils.Pagination.*;
 
 @NoArgsConstructor
 @AllArgsConstructor(onConstructor_ = {@Autowired})
@@ -43,6 +43,8 @@ import static com.final_ptoject.library_spring.utils.DTOHelper.*;
 public class AdministratorController {
     public static final String AUTHORS_ALIAS = "authors";
     public static final String PUBLISHERS_ALIAS = "publishers";
+    public static final String CURRENT_PAGE = "currentPage";
+    public static final String PAGE_NUMBERS = "pageNumbers";
     private UserService userService;
     private PublisherService publisherService;
     private AuthorService authorService;
@@ -115,8 +117,8 @@ public class AdministratorController {
 
     @GetMapping("/books")
     public String allBooksPage(Model model, @RequestParam Optional<Integer> page, @RequestParam Optional<Integer> size,
-                               @ModelAttribute Optional<Pagination.BookPaginationParam> pagingParam) {
-        Pagination.BookPaginationParam bookPaginationParam = pagingParam.orElse(new Pagination.BookPaginationParam());
+                               @ModelAttribute Optional<BookPaginationParam> pagingParam) {
+        BookPaginationParam bookPaginationParam = pagingParam.orElse(new BookPaginationParam());
         model.addAttribute("pagingParam", bookPaginationParam);
         int currentPage = page.orElse(1);
         int currentSize = size.orElse(5);
@@ -131,12 +133,7 @@ public class AdministratorController {
         String aFirstName = "%" + bookPaginationParam.getAuthorFirstName() + "%";
         Page<Book> bookPage = bookService.findAllBooksPaginated(title, aLastName, aFirstName, pageable);
         model.addAttribute("bookPage", bookPage);
-        if (bookPage.getTotalPages() > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, bookPage.getTotalPages())
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
+        model.addAttribute(PAGE_NUMBERS, buildPageNumbers(bookPage.getTotalPages()));
         return ADMIN_BOOKS_ALL_PAGE;
     }
 
@@ -183,8 +180,11 @@ public class AdministratorController {
     }
 
     @GetMapping("/authors")
-    public String getAllAuthors(Model model) {
-        model.addAttribute(AUTHORS_ALIAS, authorListToDTO(authorService.getAllAuthors()));
+    public String getAllAuthors(Model model, @RequestParam(required = false, defaultValue = "1") Integer page,
+                                @RequestParam(required = false, defaultValue = "5") Integer size) {
+        Page<Author> currenPage = authorService.getAllAuthorsPageable(page - 1, size);
+        model.addAttribute(CURRENT_PAGE, currenPage);
+        model.addAttribute(PAGE_NUMBERS, buildPageNumbers(currenPage.getTotalPages()));
         return ADMIN_AUTHORS_ALL_PAGE;
     }
 
@@ -231,14 +231,20 @@ public class AdministratorController {
     }
 
     @GetMapping("/publishers")
-    public String getAllPublishers(Model model) {
-        model.addAttribute(PUBLISHERS_ALIAS, publisherListToDTO(publisherService.getAllPublishers()));
+    public String getAllPublishers(Model model, @RequestParam(required = false, defaultValue = "1") Integer page,
+                                   @RequestParam(required = false, defaultValue = "5") Integer size) {
+        Page<Publisher> currentPage = publisherService.getAllPublishersPageable(page-1, size);
+        model.addAttribute(CURRENT_PAGE, currentPage);
+        model.addAttribute(PAGE_NUMBERS, buildPageNumbers(currentPage.getTotalPages()));
         return ADMIN_PUBLISHERS_ALL_PAGE;
     }
 
     @GetMapping("/users")
-    public String getAllUsers(Model model) {
-        model.addAttribute("users", userListToDTO(userService.getAllUsers()));
+    public String getAllUsers(Model model, @RequestParam(required = false, defaultValue = "1") Integer page,
+                              @RequestParam(required = false, defaultValue = "5") Integer size) {
+        Page<User> currentPage = userService.getAllUsersPageable(page-1, size);
+        model.addAttribute(CURRENT_PAGE, currentPage);
+        model.addAttribute(PAGE_NUMBERS, buildPageNumbers(currentPage.getTotalPages()));
         return ADMIN_USERS_ALL_PAGE;
     }
 

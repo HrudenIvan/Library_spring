@@ -29,4 +29,5 @@ public interface BookRepository  extends JpaRepository<Book, Long> {
     @Modifying
     @Query("UPDATE Book b SET b.available=b.available+1 WHERE b.id = ?1")
     void incrementBookAvailable(Long id);
+
 }

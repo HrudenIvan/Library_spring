@@ -9,6 +9,9 @@ import com.final_ptoject.library_spring.services.BookOrderService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,5 +83,15 @@ public class BookOrderServiceImpl implements BookOrderService {
     @Override
     public List<BookOrderDTO> findUserOpenOrders(Long id) {
         return bookOrderListToDTO(bookOrderRepository.getUsersOpenBookOrders(id));
+    }
+
+    @Override
+    public Page<BookOrder> findNewBookOrdersPageable(Integer page, Integer size) {
+        return bookOrderRepository.findNewBookOrdersPageable(PageRequest.of(page, size, Sort.by("orderDate")));
+    }
+
+    @Override
+    public Page<BookOrder> findUserOpenOrdersPageable(Long id, Integer page, Integer size) {
+        return bookOrderRepository.findUserOpenOrdersPageable(id, PageRequest.of(page, size, Sort.by("closeDate")));
     }
 }

@@ -3,6 +3,10 @@ package com.final_ptoject.library_spring.utils;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 public class Pagination {
     private Pagination() {}
 
@@ -62,6 +66,12 @@ public class Pagination {
                     .append("</ul></nav>");
             return paginationNavigation.toString();
         }
+    }
+
+    public static List<Integer> buildPageNumbers(int totalPages) {
+        return IntStream.rangeClosed(1, totalPages)
+                .boxed()
+                .collect(Collectors.toList());
     }
 
 }

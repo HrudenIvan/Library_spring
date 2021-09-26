@@ -2,6 +2,7 @@ package com.final_ptoject.library_spring.services;
 
 import com.final_ptoject.library_spring.dto.UserDTO;
 import com.final_ptoject.library_spring.entities.User;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -19,4 +20,8 @@ public interface UserService {
     UserDTO findUserByLogin(String login);
 
     List<UserDTO> findUsersWithOpenOrders();
+
+    Page<User> getAllUsersPageable(Integer page, Integer size);
+
+    Page<User> findUsersWithOpenOrdersPageable(Integer page, Integer size);
 }

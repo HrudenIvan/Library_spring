@@ -33,7 +33,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="user : ${users}">
+        <tr th:each="user : ${currentPage}">
             <td th:text="${user.login}"></td>
             <td th:text="${user.firstName}"></td>
             <td th:text="${user.lastName}"></td>
@@ -54,6 +54,7 @@
         </tr>
         </tbody>
     </table>
+    <div th:insert="navbars/pagination_nav :: pagination">Pagination navbar</div>
 </div>
 </body>
 </html>

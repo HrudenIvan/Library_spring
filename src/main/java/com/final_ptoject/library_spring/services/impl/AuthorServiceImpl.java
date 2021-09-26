@@ -7,6 +7,9 @@ import com.final_ptoject.library_spring.services.AuthorService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,5 +49,10 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public void deleteAuthorById(Long id) {
         authorRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Author> getAllAuthorsPageable(Integer page, Integer size) {
+        return authorRepository.findAll(PageRequest.of(page, size, Sort.by("lastName")));
     }
 }

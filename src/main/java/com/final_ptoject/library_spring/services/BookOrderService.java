@@ -1,6 +1,8 @@
 package com.final_ptoject.library_spring.services;
 
 import com.final_ptoject.library_spring.dto.BookOrderDTO;
+import com.final_ptoject.library_spring.entities.BookOrder;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -19,4 +21,8 @@ public interface BookOrderService {
     BookOrderDTO findBookOrderById(Long id);
 
     List<BookOrderDTO> findUserOpenOrders(Long id);
+
+    Page<BookOrder> findNewBookOrdersPageable(Integer page, Integer size);
+
+    Page<BookOrder> findUserOpenOrdersPageable(Long id, Integer page, Integer size);
 }

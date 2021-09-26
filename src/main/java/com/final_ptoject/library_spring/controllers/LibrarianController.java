@@ -1,12 +1,16 @@
 package com.final_ptoject.library_spring.controllers;
 
 import com.final_ptoject.library_spring.dto.BookOrderDTO;
+import com.final_ptoject.library_spring.entities.BookOrder;
+import com.final_ptoject.library_spring.entities.User;
 import com.final_ptoject.library_spring.services.BookOrderService;
 import com.final_ptoject.library_spring.services.UserService;
+import com.final_ptoject.library_spring.utils.DTOHelper;
 import com.final_ptoject.library_spring.validators.BookOrderDTOValidator;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 
 import static com.final_ptoject.library_spring.utils.Constants.*;
+import static com.final_ptoject.library_spring.utils.Pagination.buildPageNumbers;
 
 @NoArgsConstructor
 @AllArgsConstructor(onConstructor_ = {@Autowired})
@@ -28,12 +33,22 @@ public class LibrarianController {
     BookOrderDTOValidator bookOrderDTOValidator;
 
     @GetMapping
-    public String librarianPage(Model model) {
+    public String librarianPage(Model model,
+                                @RequestParam(required = false, defaultValue = "1") Integer page,
+                                @RequestParam(required = false, defaultValue = "1") Integer pageUser,
+                                @RequestParam(required = false, defaultValue = "5") Integer size) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String login = ((UserDetails) principal).getUsername();
         model.addAttribute("userDTO", userService.findUserByLogin(login));
-        model.addAttribute("newBookOrders", bookOrderService.findNewBookOrders());
-        model.addAttribute("users", userService.findUsersWithOpenOrders());
+
+        Page<BookOrder> currentPage = bookOrderService.findNewBookOrdersPageable(page - 1, size);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("pageNumbers", buildPageNumbers(currentPage.getTotalPages()));
+
+        Page<User> usersCurrentPage = userService.findUsersWithOpenOrdersPageable(pageUser - 1, size);
+        model.addAttribute("usersCurrentPage", usersCurrentPage);
+        model.addAttribute("usersPageNumbers", buildPageNumbers(usersCurrentPage.getTotalPages()));
+
         return LIBRARIAN_PAGE;
     }
 
@@ -64,7 +79,7 @@ public class LibrarianController {
     }
 
     @PostMapping("/orders/edit/{id}")
-    public String updateBookOrder(@PathVariable Long id, @ModelAttribute BookOrderDTO bookOrderDTO , BindingResult errors, Model model) {
+    public String updateBookOrder(@PathVariable Long id, @ModelAttribute BookOrderDTO bookOrderDTO, BindingResult errors, Model model) {
         bookOrderDTOValidator.validate(bookOrderDTO, errors);
         if (errors.hasErrors()) {
             model.addAttribute(bookOrderDTO);
@@ -76,8 +91,13 @@ public class LibrarianController {
     }
 
     @GetMapping("/subscriptions/{id}")
-    public String usersSubscription(@PathVariable Long id, Model model) {
-        model.addAttribute("bookOrders", bookOrderService.findUserOpenOrders(id));
+    public String usersSubscription(@PathVariable Long id, Model model,
+                                    @RequestParam(required = false, defaultValue = "1") Integer page,
+                                    @RequestParam(required = false, defaultValue = "5") Integer size) {
+        Page<BookOrder> noDTOPage = bookOrderService.findUserOpenOrdersPageable(id, page-1, size);
+        Page<BookOrderDTO> currentPage = noDTOPage.map(DTOHelper::toDTO);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("pageNumbers", buildPageNumbers(currentPage.getTotalPages()));
         return LIBRARIAN_SUBSCRIPTION_PAGE;
     }
 }

@@ -8,6 +8,9 @@ import com.final_ptoject.library_spring.utils.DTOHelper;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -73,5 +76,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> findUsersWithOpenOrders() {
         return userListToDTO(userRepository.getUsersWithOpenOrders());
+    }
+
+    @Override
+    public Page<User> getAllUsersPageable(Integer page, Integer size) {
+        return userRepository.findAll(PageRequest.of(page, size, Sort.by("userType.type")));
+    }
+
+    @Override
+    public Page<User> findUsersWithOpenOrdersPageable(Integer page, Integer size) {
+        return userRepository.getUsersWithOpenOrdersPageable(PageRequest.of(page, size, Sort.by("lastName")));
     }
 }
