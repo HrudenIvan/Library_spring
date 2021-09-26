@@ -14,6 +14,48 @@
         <h1 class="text-center" th:text="#{i.head}">List of available books</h1>
     </div>
     <br>
+    <form th:action="@{/}" th:object="${pagingParam}" method="get">
+        <table class="table">
+            <thead>
+            <tr>
+                <th th:text="#{c.sort.by}">Sort by</th>
+                <th th:text="#{c.sort.order}">Sort oder</th>
+                <th></th>
+                <th th:text="#{c.find.by} +' '+ #{c.find.by.title}">Find by Title</th>
+                <th th:text="#{c.find.by.author.lastName}">Author last name</th>
+                <th th:text="#{c.find.by.author.firstName}">Author first name</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <select name="sortBy" th:field="*{sortBy}">
+                        <option th:text="#{c.title}" th:value="title">Title</option>
+                        <option th:text="#{c.author.lastName}" th:value="author.lastName">Author last name</option>
+                        <option th:text="#{c.publisher}" th:value="publisher.name">Publisher</option>
+                        <option th:text="#{c.releaseDate}" th:value="releaseDate">Release year</option>
+                    </select>
+                </td>
+                <td>
+                    <select name="sortOrder" th:field="*{sortOrder}">
+                        <option th:text="#{c.sort.order.asc}" th:value="asc">Ascendant</option>
+                        <option th:text="#{c.sort.order.desc}" th:value="desc">Descendant</option>
+                    </select>
+                </td>
+                <td>
+                    <button class="btn btn-outline-secondary" type="submit" th:text="#{c.button.sort}">Sort</button>
+                </td>
+                <td><input type="text" name="title" th:field="*{title}"></td>
+                <td><input type="text" name="authorLastName" th:field="*{authorLastName}"></td>
+                <td><input type="text" name="authorFirstName" th:field="*{authorFirstName}"></td>
+                <td>
+                    <button class="btn btn-outline-secondary" type="submit" th:text="#{c.button.find}">Find</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
     <table class="table table-striped table-hover">
         <thead class="table-dark">
         <tr>
@@ -25,7 +67,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="book : ${books}">
+        <tr th:each="book : ${bookPage}">
             <td th:text="${book.title}">Book title</td>
             <td th:text="${book.author.lastName}">Author last name</td>
             <td th:text="${book.author.firstName}">Author first name</td>
@@ -34,6 +76,19 @@
         </tr>
         </tbody>
     </table>
+    <nav th:if="${bookPage.totalPages > 1}">
+        <ul class="pagination pagination-lg">
+            <li class="" th:each="pageNumber : ${pageNumbers}"
+                th:class="${pageNumber==bookPage.number + 1} ? 'page-item active' : 'page-item'">
+                <a class="page-link" th:href="@{${#httpServletRequest.requestURI}(
+                sortBy=${pagingParam.sortBy}, sortOrder=${pagingParam.sortOrder}, title=${pagingParam.title},
+                authorLastName=${pagingParam.authorLastName}, authorFirstName=${pagingParam.authorFirstName}, page=${pageNumber}
+                )}"
+                   th:if="${pageNumber!=bookPage.number + 1}" th:text="${pageNumber}">link</a>
+                <span class="page-link" th:if="${pageNumber==bookPage.number + 1}" th:text="${pageNumber}">link</span>
+            </li>
+        </ul>
+    </nav>
 </div>
 </body>
 </html>

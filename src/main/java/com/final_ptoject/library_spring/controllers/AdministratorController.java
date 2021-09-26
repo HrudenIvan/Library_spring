@@ -4,10 +4,12 @@ import com.final_ptoject.library_spring.dto.AuthorDTO;
 import com.final_ptoject.library_spring.dto.BookDTO;
 import com.final_ptoject.library_spring.dto.PublisherDTO;
 import com.final_ptoject.library_spring.dto.UserDTO;
+import com.final_ptoject.library_spring.entities.Book;
 import com.final_ptoject.library_spring.services.AuthorService;
 import com.final_ptoject.library_spring.services.BookService;
 import com.final_ptoject.library_spring.services.PublisherService;
 import com.final_ptoject.library_spring.services.UserService;
+import com.final_ptoject.library_spring.utils.Pagination;
 import com.final_ptoject.library_spring.validators.AuthorDTOValidator;
 import com.final_ptoject.library_spring.validators.BookDTOValidator;
 import com.final_ptoject.library_spring.validators.PublisherDTOValidator;
@@ -15,12 +17,21 @@ import com.final_ptoject.library_spring.validators.UserDTOValidator;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.final_ptoject.library_spring.utils.Constants.*;
 import static com.final_ptoject.library_spring.utils.DTOHelper.*;
@@ -103,8 +114,29 @@ public class AdministratorController {
     }
 
     @GetMapping("/books")
-    public String allBooksPage(Model model) {
-        model.addAttribute("books", bookListToDTO(bookService.getAllBooks()));
+    public String allBooksPage(Model model, @RequestParam Optional<Integer> page, @RequestParam Optional<Integer> size,
+                               @ModelAttribute Optional<Pagination.BookPaginationParam> pagingParam) {
+        Pagination.BookPaginationParam bookPaginationParam = pagingParam.orElse(new Pagination.BookPaginationParam());
+        model.addAttribute("pagingParam", bookPaginationParam);
+        int currentPage = page.orElse(1);
+        int currentSize = size.orElse(5);
+        Pageable pageable;
+        if (bookPaginationParam.getSortOrder().equals("asc")) {
+            pageable = PageRequest.of(currentPage - 1, currentSize, Sort.by(bookPaginationParam.getSortBy()));
+        } else {
+            pageable = PageRequest.of(currentPage - 1, currentSize, Sort.by(bookPaginationParam.getSortBy()).descending());
+        }
+        String title = "%" + bookPaginationParam.getTitle() + "%";
+        String aLastName = "%" + bookPaginationParam.getAuthorLastName() + "%";
+        String aFirstName = "%" + bookPaginationParam.getAuthorFirstName() + "%";
+        Page<Book> bookPage = bookService.findAllBooksPaginated(title, aLastName, aFirstName, pageable);
+        model.addAttribute("bookPage", bookPage);
+        if (bookPage.getTotalPages() > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, bookPage.getTotalPages())
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
         return ADMIN_BOOKS_ALL_PAGE;
     }
 

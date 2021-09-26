@@ -7,6 +7,8 @@ import com.final_ptoject.library_spring.services.BookService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -59,5 +61,15 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> findAllAvailableBooks() {
         return bookRepository.findAllAvailableBooks();
+    }
+
+    @Override
+    public Page<Book> findAllAvailableBooksPaginated(String title, String aLastName, String aFirstName, Pageable pageable) {
+        return bookRepository.findAllAvailableBooksPaginated(title, aLastName, aFirstName, pageable);
+    }
+
+    @Override
+    public Page<Book> findAllBooksPaginated(String title, String aLastName, String aFirstName, Pageable pageable) {
+        return bookRepository.findAllBooksPaginated(title, aLastName, aFirstName, pageable);
     }
 }
