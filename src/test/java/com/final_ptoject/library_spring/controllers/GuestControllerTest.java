@@ -4,7 +4,6 @@ import com.final_ptoject.library_spring.dto.UserDTO;
 import com.final_ptoject.library_spring.entities.Author;
 import com.final_ptoject.library_spring.entities.Book;
 import com.final_ptoject.library_spring.entities.Publisher;
-import com.final_ptoject.library_spring.entities.User;
 import com.final_ptoject.library_spring.services.BookService;
 import com.final_ptoject.library_spring.services.UserService;
 import com.final_ptoject.library_spring.validators.UserDTOValidator;
@@ -17,11 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -51,13 +48,7 @@ class GuestControllerTest {
     @MockBean
     private UserDTOValidator userDTOValidator;
     private static Page<Book> books;
-    private BindingResult errors;
     private static UserDTO userDTO1;
-
-    @BeforeAll
-    static void beforeAll() {
-
-    }
 
     @BeforeEach
     void setUp() {
@@ -119,7 +110,8 @@ class GuestControllerTest {
     //?????Why????
     @Test
     void registerNewUserWhenUserNotValidAndExistShouldRedirectToLoginPage() throws Exception {
-        errors = mock(BindingResult.class);
+        BindingResult errors = mock(BindingResult.class);
+        doNothing().when(userDTOValidator).validate(any(), any());
         when(userService.findUserByLogin(anyString())).thenReturn(userDTO1);
         when(errors.hasErrors()).thenReturn(Boolean.TRUE);
         this.mockMvc.perform(post("/registration"))
