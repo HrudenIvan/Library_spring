@@ -21,7 +21,7 @@ public class UserDTOValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "firstName.empty");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "lastName.empty");
         UserDTO userDTO = (UserDTO) target;
-        if (!userDTO.getLogin().trim().matches(LOGIN_REGEX)) {
+        if (!userDTO.getLogin().matches(LOGIN_REGEX)) {
             errors.rejectValue("login","login.regex");
         }
         if (userDTO.getId() == 0) {
@@ -37,7 +37,7 @@ public class UserDTOValidator implements Validator {
     }
 
     private void validatePasswords(Errors errors, UserDTO userDTO) {
-        if (!userDTO.getPassword().trim().matches(PASSWORD_REGEX)) {
+        if (!userDTO.getPassword().matches(PASSWORD_REGEX)) {
             errors.rejectValue("password", "password.regex");
         }
         if (!userDTO.getPassword().equals(userDTO.getPasswordConfirm())) {
