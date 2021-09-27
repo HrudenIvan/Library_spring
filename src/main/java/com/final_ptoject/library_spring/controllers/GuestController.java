@@ -22,12 +22,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static com.final_ptoject.library_spring.utils.Constants.*;
+import static com.final_ptoject.library_spring.utils.Pagination.buildPageNumbers;
 
 @NoArgsConstructor
 @AllArgsConstructor(onConstructor_ = {@Autowired})
@@ -55,12 +53,7 @@ public class GuestController {
         String aFirstName = "%" + bookPaginationParam.getAuthorFirstName() + "%";
         Page<Book> bookPage = bookService.findAllAvailableBooksPaginated(title, aLastName, aFirstName, pageable);
         model.addAttribute("bookPage", bookPage);
-        if (bookPage.getTotalPages() > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, bookPage.getTotalPages())
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
+        model.addAttribute("pageNumbers", buildPageNumbers(bookPage.getTotalPages()));
         return INDEX_PAGE;
     }
 
