@@ -1,5 +1,7 @@
 package com.final_ptoject.library_spring.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,18 +19,22 @@ import static com.final_ptoject.library_spring.utils.Constants.*;
 
 @Controller
 public class AppErrorController implements ErrorController {
+    private static final Logger logger = LoggerFactory.getLogger(AppErrorController.class);
 
     @RequestMapping("/error")
-    public String handleError(HttpServletRequest request) {
+    public String handleError(HttpServletRequest request, Exception e) {
         String path = ERROR_PAGE;
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         if (status != null) {
             int statusCode = Integer.parseInt(status.toString());
             if (statusCode == HttpStatus.FORBIDDEN.value()) {
+                logger.info("Attempt of unauthorized access");
                 path = BACK;
-            }
-            if (statusCode == HttpStatus.NOT_FOUND.value()) {
+            } else if (statusCode == HttpStatus.NOT_FOUND.value()) {
+                logger.info("Attempt of access to non existing resource");
                 path = ERROR_404_PAGE;
+            } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+                logger.error("Request " + request.getRequestURL() + " raised ", e);
             }
         }
         return path;

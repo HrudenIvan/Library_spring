@@ -11,6 +11,8 @@ import com.final_ptoject.library_spring.services.UserService;
 import com.final_ptoject.library_spring.utils.Pagination;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +36,7 @@ import static com.final_ptoject.library_spring.utils.Constants.*;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     UserService userService;
     BookService bookService;
     BookOrderService bookOrderService;
@@ -44,6 +47,10 @@ public class UserController {
         long userId = ((AppUserDetails) principal).getId();
         model.addAttribute("userDTO", userService.findUserById(userId));
         model.addAttribute("bookOrders", bookOrderService.findUsersOngoingOrders(userId));
+
+        String message = String.format("User id %s access private cabinet", userId);
+        logger.info(message);
+
         return USER_PAGE;
     }
 
@@ -83,6 +90,8 @@ public class UserController {
         bookOrderDTO.setUser(new User());
         bookOrderDTO.getUser().setId(userId);
         model.addAttribute(bookOrderDTO);
+        String message = String.format("User id %s going to order book id %s", bookOrderDTO.getUser().getId(), bookOrderDTO.getBook().getId());
+        logger.info(message);
         return USER_BOOK_ORDER_PAGE;
     }
 
@@ -92,6 +101,8 @@ public class UserController {
         bookOrderDTO.setOrderStatus(new OrderStatus());
         bookOrderDTO.getOrderStatus().setId(1);
         bookOrderService.saveBookOrder(bookOrderDTO);
+        String message = String.format("User id %s ordered book id %s", bookOrderDTO.getUser().getId(), bookOrderDTO.getBook().getId());
+        logger.info(message);
         return USER_BOOKS_REDIRECT;
     }
 }

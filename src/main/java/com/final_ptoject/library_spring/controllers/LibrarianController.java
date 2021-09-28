@@ -1,6 +1,7 @@
 package com.final_ptoject.library_spring.controllers;
 
 import com.final_ptoject.library_spring.dto.BookOrderDTO;
+import com.final_ptoject.library_spring.entities.AppUserDetails;
 import com.final_ptoject.library_spring.entities.BookOrder;
 import com.final_ptoject.library_spring.entities.User;
 import com.final_ptoject.library_spring.services.BookOrderService;
@@ -9,6 +10,8 @@ import com.final_ptoject.library_spring.utils.DTOHelper;
 import com.final_ptoject.library_spring.validators.BookOrderDTOValidator;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +31,7 @@ import static com.final_ptoject.library_spring.utils.Pagination.buildPageNumbers
 @Controller
 @RequestMapping("/librarian")
 public class LibrarianController {
+    private static final Logger logger = LoggerFactory.getLogger(LibrarianController.class);
     UserService userService;
     BookOrderService bookOrderService;
     BookOrderDTOValidator bookOrderDTOValidator;
@@ -58,6 +62,12 @@ public class LibrarianController {
         setToNowIfOpenDateIsNull(bookOrderDTO);
         setReturnDateDependsOnOrderType(bookOrderDTO);
         model.addAttribute(bookOrderDTO);
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long userId = ((AppUserDetails) principal).getId();
+        String message = String.format("Librarian %s going to modify bookOrder id %s", userId, bookOrderDTO.getId());
+        logger.info(message);
+
         return LIBRARIAN_ORDER_EDIT_PAGE;
     }
 
@@ -80,13 +90,24 @@ public class LibrarianController {
 
     @PostMapping("/orders/edit/{id}")
     public String updateBookOrder(@PathVariable Long id, @ModelAttribute BookOrderDTO bookOrderDTO, BindingResult errors, Model model) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long userId = ((AppUserDetails) principal).getId();
+
         bookOrderDTOValidator.validate(bookOrderDTO, errors);
         if (errors.hasErrors()) {
             model.addAttribute(bookOrderDTO);
+
+            String message = String.format("Librarian %s failed to modify bookOrder id %s", userId, bookOrderDTO.getId());
+            logger.info(message);
+
             return LIBRARIAN_ORDER_EDIT_PAGE;
         }
 
         bookOrderService.updateBookOrder(id, bookOrderDTO);
+
+        String message = String.format("Librarian %s modified bookOrder id %s", userId, bookOrderDTO.getId());
+        logger.info(message);
+
         return LIBRARIAN_PAGE_REDIRECT;
     }
 
@@ -98,6 +119,12 @@ public class LibrarianController {
         Page<BookOrderDTO> currentPage = noDTOPage.map(DTOHelper::toDTO);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("pageNumbers", buildPageNumbers(currentPage.getTotalPages()));
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long userId = ((AppUserDetails) principal).getId();
+        String message = String.format("Librarian %s accessed subscription of user id %s", userId, id);
+        logger.info(message);
+
         return LIBRARIAN_SUBSCRIPTION_PAGE;
     }
 }

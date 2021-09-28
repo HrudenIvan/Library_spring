@@ -9,6 +9,8 @@ import com.final_ptoject.library_spring.utils.Pagination.BookPaginationParam;
 import com.final_ptoject.library_spring.validators.UserDTOValidator;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +33,7 @@ import static com.final_ptoject.library_spring.utils.Pagination.buildPageNumbers
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @Controller
 public class GuestController {
+    private static final Logger logger = LoggerFactory.getLogger(GuestController.class);
     private BookService bookService;
     private UserService userService;
     private UserDTOValidator userDTOValidator;
@@ -74,6 +77,8 @@ public class GuestController {
         if (userService.findUserByLogin(userDTO.getLogin()) != null) {
             model.addAttribute("userExist", true);
             model.addAttribute(userDTO);
+            String message = String.format("Registration failed for user with login \"%s\", this login already in use!", userDTO.getLogin());
+            logger.info(message);
             return REGISTRATION_PAGE;
         }
         if (errors.hasErrors()) {
@@ -85,6 +90,8 @@ public class GuestController {
         userDTO.getUserType().setId(3);
         userDTO.setBlocked(false);
         userService.saveUser(userDTO);
+        String message = String.format("User with login %s successfully registered", userDTO.getLogin());
+        logger.info(message);
         return "redirect: /login";
     }
 }
