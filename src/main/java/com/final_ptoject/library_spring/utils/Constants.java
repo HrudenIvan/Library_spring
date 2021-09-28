@@ -7,6 +7,7 @@ public class Constants {
 
     //Admin role
         //Users
+    public static final String ADMIN_PAGE_REDIRECT = "redirect:/administrator";
     public static final String ADMIN_PAGE = "/administrator/admin_page";
     public static final String ADMIN_USERS_ALL_PAGE = "/administrator/all_users";
     public static final String ADMIN_USERS_ALL_REDIRECT = "redirect:/administrator/users";
@@ -29,19 +30,25 @@ public class Constants {
     public static final String ADMIN_BOOKS_EDIT_PAGE = "/administrator/edit_book";
 
     //Guest role
+    public static final String INDEX_PAGE_REDIRECT = "redirect:/";
     public static final String INDEX_PAGE = "/index";
     public static final String LOGIN_PAGE = "/login";
     public static final String REGISTRATION_PAGE = "/registration";
 
     //Librarian role
-    public static final String LIBRARIAN_PAGE = "/librarian/librarian_page";
     public static final String LIBRARIAN_PAGE_REDIRECT = "redirect:/librarian";
+    public static final String LIBRARIAN_PAGE = "/librarian/librarian_page";
     public static final String LIBRARIAN_ORDER_EDIT_PAGE = "/librarian/edit_book_order";
     public static final String LIBRARIAN_SUBSCRIPTION_PAGE = "/librarian/subscription";
 
     //User role
+    public static final String USER_BOOKS_REDIRECT = "redirect:/user/books";
     public static final String USER_PAGE = "/user/user_page";
     public static final String USER_BOOKS_PAGE = "/user/books";
-    public static final String USER_BOOKS_REDIRECT = "redirect:/user/books";
     public static final String USER_BOOK_ORDER_PAGE = "/user/create_book_order";
+
+    //Errors
+    public static final String BACK = "forward:/back";
+    public static final String ERROR_PAGE = "/error";
+    public static final String ERROR_404_PAGE = "/error_404";
 }
