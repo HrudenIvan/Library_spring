@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Implementation of {@link AuthorService}
+ */
 @NoArgsConstructor
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @Service

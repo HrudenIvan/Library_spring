@@ -4,6 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
+/**
+ * User entity. Refers to table "users"
+ */
 @Getter
 @Setter
 @NoArgsConstructor

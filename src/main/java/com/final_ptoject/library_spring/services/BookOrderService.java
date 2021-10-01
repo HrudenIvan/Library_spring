@@ -6,6 +6,9 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
+/**
+ * Interface for {@link BookOrder} service
+ */
 public interface BookOrderService {
 
     BookOrderDTO saveBookOrder(BookOrderDTO bookOrderDTO);

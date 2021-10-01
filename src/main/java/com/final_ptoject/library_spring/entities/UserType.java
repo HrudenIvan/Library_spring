@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+/**
+ * UserType entity. Refers to table "user_types"
+ */
 @Setter
 @Getter
 @NoArgsConstructor

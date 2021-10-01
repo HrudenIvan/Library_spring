@@ -5,6 +5,7 @@ import com.final_ptoject.library_spring.entities.BookOrder;
 import com.final_ptoject.library_spring.repositories.BookOrderRepository;
 import com.final_ptoject.library_spring.repositories.BookRepository;
 import com.final_ptoject.library_spring.repositories.UserRepository;
+import com.final_ptoject.library_spring.services.AuthorService;
 import com.final_ptoject.library_spring.services.BookOrderService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,9 @@ import java.util.List;
 import static com.final_ptoject.library_spring.utils.DTOHelper.bookOrderListToDTO;
 import static com.final_ptoject.library_spring.utils.DTOHelper.toDTO;
 
+/**
+ * Implementation of {@link BookOrderService}
+ */
 @NoArgsConstructor
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @Service

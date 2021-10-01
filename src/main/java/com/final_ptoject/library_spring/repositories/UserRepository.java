@@ -11,6 +11,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repository for {@link User}
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 

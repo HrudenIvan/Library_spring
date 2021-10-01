@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+/**
+ * Book entity. Refers to table "books"
+ */
 @Getter
 @Setter
 @NoArgsConstructor

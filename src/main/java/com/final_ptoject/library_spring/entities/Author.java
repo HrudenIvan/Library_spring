@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+/**
+ * Author entity. Refers to table "authors"
+ */
 @Getter
 @Setter
 @NoArgsConstructor

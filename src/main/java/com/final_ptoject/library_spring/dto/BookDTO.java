@@ -1,9 +1,13 @@
 package com.final_ptoject.library_spring.dto;
 
 import com.final_ptoject.library_spring.entities.Author;
+import com.final_ptoject.library_spring.entities.Book;
 import com.final_ptoject.library_spring.entities.Publisher;
 import lombok.*;
 
+/**
+ * DTO class for entity {@link Book}
+ */
 @Getter
 @Setter
 @Builder

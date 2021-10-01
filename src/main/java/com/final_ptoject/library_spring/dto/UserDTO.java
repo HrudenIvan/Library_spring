@@ -1,8 +1,12 @@
 package com.final_ptoject.library_spring.dto;
 
+import com.final_ptoject.library_spring.entities.User;
 import com.final_ptoject.library_spring.entities.UserType;
 import lombok.*;
 
+/**
+ * DTO class for entity {@link User}
+ */
 @Getter
 @Setter
 @Builder

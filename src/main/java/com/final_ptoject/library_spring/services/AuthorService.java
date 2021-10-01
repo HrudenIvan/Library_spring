@@ -6,6 +6,9 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
+/**
+ * Interface for {@link Author} service
+ */
 public interface AuthorService {
 
     List<Author> getAllAuthors();

@@ -9,6 +9,9 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * BookOrder entity. Refers to table "users_books"
+ */
 @Getter
 @Setter
 @NoArgsConstructor

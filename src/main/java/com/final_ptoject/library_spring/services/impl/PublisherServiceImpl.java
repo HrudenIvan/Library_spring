@@ -3,6 +3,7 @@ package com.final_ptoject.library_spring.services.impl;
 import com.final_ptoject.library_spring.dto.PublisherDTO;
 import com.final_ptoject.library_spring.entities.Publisher;
 import com.final_ptoject.library_spring.repositories.PublisherRepository;
+import com.final_ptoject.library_spring.services.BookService;
 import com.final_ptoject.library_spring.services.PublisherService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Implementation of {@link PublisherService}
+ */
 @NoArgsConstructor
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @Service

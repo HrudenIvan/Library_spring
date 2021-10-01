@@ -1,7 +1,11 @@
 package com.final_ptoject.library_spring.dto;
 
+import com.final_ptoject.library_spring.entities.Publisher;
 import lombok.*;
 
+/**
+ * DTO class for entity {@link Publisher}
+ */
 @Getter
 @Setter
 @Builder

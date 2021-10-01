@@ -2,6 +2,7 @@ package com.final_ptoject.library_spring.controllers;
 
 import com.final_ptoject.library_spring.dto.UserDTO;
 import com.final_ptoject.library_spring.entities.Book;
+import com.final_ptoject.library_spring.entities.User;
 import com.final_ptoject.library_spring.entities.UserType;
 import com.final_ptoject.library_spring.services.BookService;
 import com.final_ptoject.library_spring.services.UserService;
@@ -29,6 +30,9 @@ import java.util.Optional;
 import static com.final_ptoject.library_spring.utils.Constants.*;
 import static com.final_ptoject.library_spring.utils.Pagination.buildPageNumbers;
 
+/**
+ * Controller for guest.
+ */
 @NoArgsConstructor
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @Controller
@@ -38,6 +42,14 @@ public class GuestController {
     private UserService userService;
     private UserDTOValidator userDTOValidator;
 
+    /**
+     * Method to access index page. Handles GET request for URL "/"
+     * @param model instance of {@link Model}
+     * @param page number of requested page
+     * @param size size of requested page
+     * @param pagingParam instance of {@link BookPaginationParam}, which holds parameters for pagination
+     * @return view "/index"
+     */
     @GetMapping
     public String indexPage(Model model, @RequestParam Optional<Integer> page, @RequestParam Optional<Integer> size,
                             @ModelAttribute Optional<BookPaginationParam> pagingParam) {
@@ -60,17 +72,35 @@ public class GuestController {
         return INDEX_PAGE;
     }
 
+    /**
+     * Method to access login page. Handles GET request for URL "/login"
+     * @return view "/login"
+     */
     @GetMapping("/login")
     public String loginPage() {
         return LOGIN_PAGE;
     }
 
+    /**
+     * Method to access registration page. Handles GET request for URL "/registration"
+     * @param model instance of {@link Model}
+     * @return view "/registration"
+     */
     @GetMapping("/registration")
     public String registrationPage(Model model) {
         model.addAttribute(new UserDTO());
         return REGISTRATION_PAGE;
     }
 
+    /**
+     * Method for user registration. Handles POST request for URL "/registration".
+     * If userDTO is valid, then redirects to "redirect:/login",
+     * otherwise forwards to "/registration"
+     * @param userDTO model attribute {@link UserDTO} for entity {@link User}
+     * @param errors instance of {@link Model}
+     * @param model instance of {@link BindingResult}
+     * @return view
+     */
     @PostMapping("/registration")
     public String registerNewUser(@ModelAttribute UserDTO userDTO, BindingResult errors, Model model) {
         userDTOValidator.validate(userDTO, errors);
@@ -92,6 +122,6 @@ public class GuestController {
         userService.saveUser(userDTO);
         String message = String.format("User with login %s successfully registered", userDTO.getLogin());
         logger.info(message);
-        return "redirect: /login";
+        return LOGIN_PAGE_REDIRECT;
     }
 }

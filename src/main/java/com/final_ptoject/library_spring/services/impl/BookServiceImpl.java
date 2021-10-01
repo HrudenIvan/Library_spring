@@ -3,6 +3,7 @@ package com.final_ptoject.library_spring.services.impl;
 import com.final_ptoject.library_spring.dto.BookDTO;
 import com.final_ptoject.library_spring.entities.Book;
 import com.final_ptoject.library_spring.repositories.BookRepository;
+import com.final_ptoject.library_spring.services.BookOrderService;
 import com.final_ptoject.library_spring.services.BookService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Implementation of {@link BookService}
+ */
 @NoArgsConstructor
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @Service

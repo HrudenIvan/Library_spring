@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository for {@link BookOrder}
+ */
 @Repository
 public interface BookOrderRepository extends JpaRepository<BookOrder, Long> {
 

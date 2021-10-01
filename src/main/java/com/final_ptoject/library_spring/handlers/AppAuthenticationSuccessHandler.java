@@ -15,6 +15,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Defines strategy used to handle a successful user authentication in such way that
+ * users with role "ADMIN" moves to URL "/administrator",
+ * "LIBRARIAN" - "/librarian", "USER" - "/user/books".
+ */
 public class AppAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
@@ -28,6 +33,7 @@ public class AppAuthenticationSuccessHandler implements AuthenticationSuccessHan
         String targetUrl = determineTargetUrl(authentication);
         redirectStrategy.sendRedirect(request, response, targetUrl);
     }
+
 
     protected String determineTargetUrl(final Authentication authentication) {
         Map<String, String> roleTargetUrl = new HashMap<>();

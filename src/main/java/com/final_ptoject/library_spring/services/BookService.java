@@ -7,6 +7,9 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+/**
+ * Interface for {@link Book} service
+ */
 public interface BookService {
 
     List<Book> getAllBooks();

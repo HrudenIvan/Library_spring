@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+/**
+ * OrderType entity. Refers to table "order_types"
+ */
 @Getter
 @Setter
 @NoArgsConstructor

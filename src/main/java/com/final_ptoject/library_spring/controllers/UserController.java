@@ -3,6 +3,7 @@ package com.final_ptoject.library_spring.controllers;
 import com.final_ptoject.library_spring.dto.BookOrderDTO;
 import com.final_ptoject.library_spring.entities.AppUserDetails;
 import com.final_ptoject.library_spring.entities.Book;
+import com.final_ptoject.library_spring.entities.BookOrder;
 import com.final_ptoject.library_spring.entities.OrderStatus;
 import com.final_ptoject.library_spring.entities.User;
 import com.final_ptoject.library_spring.services.BookOrderService;
@@ -31,6 +32,9 @@ import java.util.stream.IntStream;
 
 import static com.final_ptoject.library_spring.utils.Constants.*;
 
+/**
+ * Controller for "USER" role. Handles all request starts with "/user"
+ */
 @NoArgsConstructor
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @Controller
@@ -41,6 +45,11 @@ public class UserController {
     BookService bookService;
     BookOrderService bookOrderService;
 
+    /**
+     * Method to access {@link User} page. Handles GET request for URL "/user"
+     * @param model instance of {@link Model}
+     * @return view "/user/user_page"
+     */
     @GetMapping
     public String userPage(Model model) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -54,6 +63,14 @@ public class UserController {
         return USER_PAGE;
     }
 
+    /**
+     * Method to access books page. Handles GET request for URL "/user/books"
+     * @param model instance of {@link Model}
+     * @param page number of requested page
+     * @param size size of requested page
+     * @param pagingParam instance of {@link Pagination.BookPaginationParam}, which holds parameters for pagination
+     * @return view "/user/books"
+     */
     @GetMapping("/books")
     public String availableBooksPage(Model model, @RequestParam Optional<Integer> page, @RequestParam Optional<Integer> size,
                                      @ModelAttribute Optional<Pagination.BookPaginationParam> pagingParam) {
@@ -81,6 +98,12 @@ public class UserController {
         return USER_BOOKS_PAGE;
     }
 
+    /**
+     * Method to access book ordering page. Handles GET request for URL "/user/books/order/{id}"
+     * @param id {@link Book} id
+     * @param model instance of {@link Model}
+     * @return view "/user/create_book_order"
+     */
     @GetMapping("/books/order/{id}")
     public String bookOrderPage(@PathVariable Long id, Model model) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -95,6 +118,11 @@ public class UserController {
         return USER_BOOK_ORDER_PAGE;
     }
 
+    /**
+     * Method to save new {@link BookOrder}. Handles POST request for URL "/user/books/order"
+     * @param bookOrderDTO model attribute {@link BookOrderDTO} for entity {@link BookOrder}
+     * @return view "redirect:/user/books"
+     */
     @PostMapping("/books/order")
     public String saveBookOrder(@ModelAttribute BookOrderDTO bookOrderDTO) {
         bookOrderDTO.setOrderDate(LocalDateTime.now());

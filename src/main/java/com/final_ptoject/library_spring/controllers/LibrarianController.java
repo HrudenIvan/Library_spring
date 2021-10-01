@@ -26,6 +26,9 @@ import java.time.LocalDate;
 import static com.final_ptoject.library_spring.utils.Constants.*;
 import static com.final_ptoject.library_spring.utils.Pagination.buildPageNumbers;
 
+/**
+ * Controller for "LIBRARIAN" role. Handles all request starts with "/librarian"
+ */
 @NoArgsConstructor
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @Controller
@@ -36,6 +39,14 @@ public class LibrarianController {
     BookOrderService bookOrderService;
     BookOrderDTOValidator bookOrderDTOValidator;
 
+    /**
+     * Method to access librarian page. Handles GET request for URL "/librarian"
+     * @param model instance of {@link Model}
+     * @param page number of requested page for orders table
+     * @param size size of requested page
+     * @param pageUser number of requested page for users table
+     * @return view "/librarian/librarian_page"
+     */
     @GetMapping
     public String librarianPage(Model model,
                                 @RequestParam(required = false, defaultValue = "1") Integer page,
@@ -56,6 +67,12 @@ public class LibrarianController {
         return LIBRARIAN_PAGE;
     }
 
+    /**
+     * Method to access {@link BookOrder} editing page. Handles GET request for URL "/librarian/orders/edit/{id}"
+     * @param id {@link BookOrder} id
+     * @param model instance of {@link Model}
+     * @return view "/librarian/edit_book_order"
+     */
     @GetMapping("/orders/edit/{id}")
     public String editBookOrderPage(@PathVariable Long id, Model model) {
         BookOrderDTO bookOrderDTO = bookOrderService.findBookOrderById(id);
@@ -88,6 +105,16 @@ public class LibrarianController {
         }
     }
 
+    /**
+     * Method to update {@link BookOrder} by id. Handles POST request for URL "/librarian/orders/edit/{id}"
+     * if bookOrderDTO is valid, then redirects to "redirect:/librarian",
+     * otherwise forwards to "/librarian/edit_book_order"
+     * @param id {@link BookOrder} id
+     * @param bookOrderDTO model attribute {@link BookOrderDTO} for entity {@link BookOrder}
+     * @param errors instance of {@link BindingResult}
+     * @param model instance of {@link Model}
+     * @return view
+     */
     @PostMapping("/orders/edit/{id}")
     public String updateBookOrder(@PathVariable Long id, @ModelAttribute BookOrderDTO bookOrderDTO, BindingResult errors, Model model) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -111,6 +138,14 @@ public class LibrarianController {
         return LIBRARIAN_PAGE_REDIRECT;
     }
 
+    /**
+     * Method to access {@link User} subscription page. Handles GET request for URL "/librarian/subscriptions/{id}"
+     * @param id {@link User} id
+     * @param model instance of {@link Model}
+     * @param page number of requested page
+     * @param size size of requested page
+     * @return view "/librarian/subscription"
+     */
     @GetMapping("/subscriptions/{id}")
     public String usersSubscription(@PathVariable Long id, Model model,
                                     @RequestParam(required = false, defaultValue = "1") Integer page,

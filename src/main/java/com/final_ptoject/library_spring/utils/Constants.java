@@ -1,7 +1,13 @@
 package com.final_ptoject.library_spring.utils;
 
+/**
+ * Utility class that holds constants
+ */
 public class Constants {
 
+    /**
+     * Secure constructor, to prevent instantiating this class
+     */
     private Constants() {
     }
 
@@ -33,6 +39,7 @@ public class Constants {
     public static final String INDEX_PAGE_REDIRECT = "redirect:/";
     public static final String INDEX_PAGE = "/index";
     public static final String LOGIN_PAGE = "/login";
+    public static final String LOGIN_PAGE_REDIRECT = "redirect:/login";
     public static final String REGISTRATION_PAGE = "/registration";
 
     //Librarian role

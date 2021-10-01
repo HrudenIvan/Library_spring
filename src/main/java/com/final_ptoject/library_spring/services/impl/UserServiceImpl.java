@@ -3,6 +3,7 @@ package com.final_ptoject.library_spring.services.impl;
 import com.final_ptoject.library_spring.dto.UserDTO;
 import com.final_ptoject.library_spring.entities.User;
 import com.final_ptoject.library_spring.repositories.UserRepository;
+import com.final_ptoject.library_spring.services.PublisherService;
 import com.final_ptoject.library_spring.services.UserService;
 import com.final_ptoject.library_spring.utils.DTOHelper;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,9 @@ import java.util.List;
 
 import static com.final_ptoject.library_spring.utils.DTOHelper.userListToDTO;
 
+/**
+ * Implementation of {@link UserService}
+ */
 @NoArgsConstructor
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @Service

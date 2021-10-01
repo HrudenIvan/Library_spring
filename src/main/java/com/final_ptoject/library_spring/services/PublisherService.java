@@ -6,6 +6,9 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
+/**
+ * Interface for {@link Publisher} service
+ */
 public interface PublisherService {
 
     List<Publisher> getAllPublishers();

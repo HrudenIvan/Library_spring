@@ -1,10 +1,13 @@
 package com.final_ptoject.library_spring.dto;
 
 import com.final_ptoject.library_spring.entities.Book;
+import com.final_ptoject.library_spring.entities.BookOrder;
 import com.final_ptoject.library_spring.entities.OrderStatus;
 import com.final_ptoject.library_spring.entities.OrderType;
 import com.final_ptoject.library_spring.entities.User;
 import lombok.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.IOException;
@@ -13,12 +16,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Properties;
 
+/**
+ * DTO class for entity {@link BookOrder}
+ */
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookOrderDTO {
+    private static final Logger logger = LoggerFactory.getLogger(BookOrderDTO.class);
     private long id;
     private LocalDateTime orderDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -44,9 +51,8 @@ public class BookOrderDTO {
 
             properties.load(inputStream);
             penaltyPerDay = Double.parseDouble(properties.getProperty("penaltyPerDay"));
-        } catch (IOException e) {
-            // TODO
-            e.printStackTrace();
+        } catch (IOException|NumberFormatException e) {
+            logger.error("Cant initialize PENALTY_PER_DAY");
         }
         PENALTY_PER_DAY=penaltyPerDay;
     }

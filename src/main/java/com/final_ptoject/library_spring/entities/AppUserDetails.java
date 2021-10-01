@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Custom implementation of {@link UserDetails} interface. Used for authentication
+ */
 public class AppUserDetails implements UserDetails {
     private final long id;
     private final String login;
@@ -61,5 +64,20 @@ public class AppUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return !blocked;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AppUserDetails that = (AppUserDetails) o;
+
+        return login.equals(that.login);
+    }
+
+    @Override
+    public int hashCode() {
+        return login.hashCode();
     }
 }

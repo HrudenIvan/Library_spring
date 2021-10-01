@@ -7,9 +7,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Utility class that helps with pagination
+ */
 public class Pagination {
+
+    /**
+     * Secure constructor, to prevent instantiating this class
+     */
     private Pagination() {}
 
+    /**
+     * Inner class that holds pagination parameters
+     */
     @Getter
     @Setter
     public static class BookPaginationParam {
@@ -27,6 +37,12 @@ public class Pagination {
             authorLastName="";
         }
 
+        /**
+         * Method to build pagination navigation menu
+         * @param currentPage current page
+         * @param totalPages total amount of pages
+         * @return String that represent pagination navigation menu
+         */
         public String buildPaginationNavigation(int currentPage, int totalPages) {
             if (totalPages == 1) {
                 return "";
@@ -68,6 +84,11 @@ public class Pagination {
         }
     }
 
+    /**
+     * Method to build {@link List} of page numbers for pagination
+     * @param totalPages total amount of pages
+     * @return {@link List} of {@link Integer}
+     */
     public static List<Integer> buildPageNumbers(int totalPages) {
         return IntStream.rangeClosed(1, totalPages)
                 .boxed()

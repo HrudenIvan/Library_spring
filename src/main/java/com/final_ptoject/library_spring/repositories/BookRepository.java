@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository for {@link Book}
+ */
 @Repository
 public interface BookRepository  extends JpaRepository<Book, Long> {
 

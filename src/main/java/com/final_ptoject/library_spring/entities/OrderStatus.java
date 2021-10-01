@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+/**
+ * OrderStatus entity. Refers to table "order_statuses"
+ */
 @Getter
 @Setter
 @NoArgsConstructor

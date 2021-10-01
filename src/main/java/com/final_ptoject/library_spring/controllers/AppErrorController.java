@@ -17,10 +17,22 @@ import java.util.Collection;
 
 import static com.final_ptoject.library_spring.utils.Constants.*;
 
+/**
+ * Controller to handle errors
+ */
 @Controller
 public class AppErrorController implements ErrorController {
     private static final Logger logger = LoggerFactory.getLogger(AppErrorController.class);
 
+    /**
+     * Method to handle errors. Handles request to URL "/error".
+     * If HttpStatus is FORBIDDEN, then forwards to "forward:/back",
+     * if HttpStatus is NOT_FOUND, then forwards to "/error_404",
+     * if HttpStatus is INTERNAL_SERVER_ERROR, then forwards to "/error"
+     * @param request {@link HttpServletRequest}
+     * @param e {@link Exception}
+     * @return view
+     */
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request, Exception e) {
         String path = ERROR_PAGE;
@@ -40,6 +52,12 @@ public class AppErrorController implements ErrorController {
         return path;
     }
 
+    /**
+     * Method to handle request "/back". Redirects to user role specific page:
+     * for "ADMIN" - "redirect:/administrator", for "LIBRARIAN" - "redirect:/librarian",
+     * for "USER" - "redirect:/user/books", guest must be redirected to "redirect:/"
+     * @return view
+     */
     @RequestMapping("/back")
     public String back() {
         String path = INDEX_PAGE_REDIRECT;
