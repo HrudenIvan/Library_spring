@@ -120,7 +120,7 @@ public class GuestController {
         userDTO.getUserType().setId(3);
         userDTO.setBlocked(false);
         userService.saveUser(userDTO);
-        String message = String.format("User with login %s successfully registered", userDTO.getLogin());
+        String message = String.format("User with login \"%s\" successfully registered", userDTO.getLogin());
         logger.info(message);
         return LOGIN_PAGE_REDIRECT;
     }
